@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Aris Technical</title>
+  <rect x="8" y="8" width="496" height="496" rx="112" fill="#09080d"/>
+  <rect x="8.5" y="8.5" width="495" height="495" rx="111.5" fill="none" stroke="#F4F1F8" stroke-opacity="0.14"/>
+  <g transform="translate(64 64) scale(6)">
+    <path d="M32 8 8 54h12.5L32 31.8 43.5 54H56L32 8Z" fill="#F4F1F8"/>
+    <path d="M32 31.8 43.5 54H33.8L27.1 41.1 32 31.8Z" fill="#A76CFF"/>
+  </g>
+</svg>

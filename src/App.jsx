@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import AdminPage from './AdminPage.jsx'
+import { formatArticleDate, loadArticles } from './articleStore.js'
 
 const articleCategories = [
   ['ARIS Administration', 'Configuration, access & troubleshooting'],
@@ -84,11 +86,60 @@ const topicLinks = [
   'Repository API',
 ]
 
+const categoryPages = [
+  {
+    slug: 'administration',
+    number: '01',
+    title: 'ARIS Administration',
+    shortTitle: 'Administration',
+    description: 'Configuration, users, permissions, authentication and practical troubleshooting for stable ARIS environments.',
+    topics: ['Users & groups', 'LDAP & SSO', 'Permissions', 'Troubleshooting'],
+  },
+  {
+    slug: 'scripting',
+    number: '02',
+    title: 'ARIS Scripting',
+    shortTitle: 'Scripting',
+    description: 'Report scripts, macros, JavaScript development and reusable automation for everyday technical work.',
+    topics: ['Report scripts', 'Macros', 'JavaScript', 'Data exports'],
+  },
+  {
+    slug: 'apg-automation',
+    number: '03',
+    title: 'ARIS Process Governance & Automation',
+    shortTitle: 'APG & Automation',
+    description: 'Technical guides for ARIS Process Governance workflows, approvals, automation and related development.',
+    topics: ['APG workflows', 'Approvals', 'Triggers', 'Automation'],
+  },
+  {
+    slug: 'rest-api-integrations',
+    number: '04',
+    title: 'ARIS REST API & Integrations',
+    shortTitle: 'REST API & Integrations',
+    description: 'Authentication, repository access, data exchange and integrations with external enterprise systems.',
+    topics: ['Authentication', 'Repository API', 'Data exchange', 'Integrations'],
+  },
+  {
+    slug: 'installation-setup',
+    number: '05',
+    title: 'ARIS Installation & Setup',
+    shortTitle: 'Installation & Setup',
+    description: 'Installation, infrastructure, configuration and technical setup guidance for ARIS environments.',
+    topics: ['Installation', 'Infrastructure', 'Configuration', 'Upgrades'],
+  },
+]
+
 function BrandMark() {
   return (
-    <svg viewBox="0 0 38 38" aria-hidden="true">
-      <path d="M13 8H8v22h5M25 8h5v22h-5" />
-      <path d="m14 25 5-13 5 13M16.2 20h5.6" />
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <path
+        d="M32 8 8 54h12.5L32 31.8 43.5 54H56L32 8Z"
+        fill="currentColor"
+      />
+      <path
+        d="M32 31.8 43.5 54H33.8L27.1 41.1 32 31.8Z"
+        fill="var(--violet)"
+      />
     </svg>
   )
 }
@@ -113,7 +164,7 @@ function ArrowIcon() {
   return <span aria-hidden="true">↗</span>
 }
 
-function Header() {
+function Header({ currentPage = 'home' }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [articlesOpen, setArticlesOpen] = useState(false)
 
@@ -137,7 +188,7 @@ function Header() {
   return (
     <header className="site-header">
       <div className="header-inner">
-        <a className="brand" href="#top" aria-label="Aris Technical home" onClick={closeNavigation}>
+        <a className="brand" href="/" aria-label="Aris Technical home" onClick={closeNavigation}>
           <span className="brand-mark"><BrandMark /></span>
           <span className="brand-name">
             <strong>ARIS</strong>
@@ -161,11 +212,18 @@ function Header() {
           className={`primary-navigation${menuOpen ? ' is-open' : ''}`}
           aria-label="Primary navigation"
         >
-          <a className="nav-link is-active" href="#top" aria-current="page" onClick={closeNavigation}>Home</a>
+          <a
+            className={`nav-link${currentPage === 'home' ? ' is-active' : ''}`}
+            href="/"
+            aria-current={currentPage === 'home' ? 'page' : undefined}
+            onClick={closeNavigation}
+          >
+            Home
+          </a>
 
           <div className={`nav-dropdown${articlesOpen ? ' is-open' : ''}`}>
             <button
-              className="nav-link dropdown-toggle"
+              className={`nav-link dropdown-toggle${currentPage === 'articles' ? ' is-active' : ''}`}
               type="button"
               aria-expanded={articlesOpen}
               aria-controls="articles-menu"
@@ -177,13 +235,13 @@ function Header() {
             <div className="dropdown-panel" id="articles-menu">
               <div className="dropdown-heading">
                 <span>Technical library</span>
-                <a className="view-all-link" href="#articles" onClick={closeNavigation}>
+                <a className="view-all-link" href="/articles/" onClick={closeNavigation}>
                   View all articles <span aria-hidden="true">→</span>
                 </a>
               </div>
               <div className="category-list">
                 {articleCategories.map(([title, description], index) => (
-                  <a href={`#category-${index + 1}`} key={title} onClick={closeNavigation}>
+                  <a href={`/articles/#${categoryPages[index].slug}`} key={title} onClick={closeNavigation}>
                     <span className="category-number">0{index + 1}</span>
                     <span>
                       <strong>{title}</strong>
@@ -196,8 +254,8 @@ function Header() {
             </div>
           </div>
 
-          <a className="nav-link" href="#services" onClick={closeNavigation}>Services</a>
-          <a className="contact-link" href="#contact" onClick={closeNavigation}>
+          <a className="nav-link" href="/#services" onClick={closeNavigation}>Services</a>
+          <a className="contact-link" href="/#contact" onClick={closeNavigation}>
             Discuss a project <ArrowIcon />
           </a>
         </nav>
@@ -219,11 +277,46 @@ function SectionHeading({ label, title, description, action }) {
   )
 }
 
-function App() {
+function Footer() {
+  return (
+    <footer className="site-footer">
+      <div className="content-container footer-main">
+        <div className="footer-brand">
+          <a className="brand" href="/" aria-label="Aris Technical home">
+            <span className="brand-mark"><BrandMark /></span>
+            <span className="brand-name"><strong>ARIS</strong><span>TECHNICAL</span></span>
+          </a>
+          <p>Practical ARIS technical knowledge and professional consulting.</p>
+        </div>
+        <div className="footer-links">
+          <div>
+            <h3>Navigate</h3>
+            <a href="/">Home</a>
+            <a href="/articles/">Articles</a>
+            <a href="/#services">Services</a>
+            <a href="/#contact">Contact</a>
+          </div>
+          <div>
+            <h3>Technical areas</h3>
+            {categoryPages.map((category) => (
+              <a href={`/articles/#${category.slug}`} key={category.slug}>{category.title}</a>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="content-container footer-bottom">
+        <span>© 2026 Aris Technical</span>
+        <span>Built around useful technical knowledge.</span>
+      </div>
+    </footer>
+  )
+}
+
+function HomePage() {
   return (
     <div className="site-shell" id="top">
       <a className="skip-link" href="#main-content">Skip to content</a>
-      <Header />
+      <Header currentPage="home" />
 
       <main id="main-content">
         <section className="hero-section" aria-labelledby="hero-title">
@@ -237,7 +330,7 @@ function App() {
               development, automation and integration.
             </p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#articles">Explore technical articles <span aria-hidden="true">→</span></a>
+              <a className="button button-primary" href="/articles/">Explore technical articles <span aria-hidden="true">→</span></a>
               <a className="button button-secondary" href="#contact">Discuss your project <ArrowIcon /></a>
             </div>
             <div className="hero-topics" aria-label="Core areas of expertise">
@@ -259,7 +352,7 @@ function App() {
             />
             <div className="expertise-grid">
               {expertiseAreas.map((area, index) => (
-                <a className={`expertise-card expertise-card-${index + 1}`} id={`category-${index + 1}`} href="#articles" key={area.title}>
+                <a className={`expertise-card expertise-card-${index + 1}`} id={`category-${index + 1}`} href={`/articles/#${categoryPages[index].slug}`} key={area.title}>
                   <span className="card-number">{area.number}</span>
                   <h3>{area.title}</h3>
                   <p>{area.description}</p>
@@ -299,7 +392,7 @@ function App() {
               label="From the technical library"
               title="Latest ARIS technical articles"
               description="Practical answers to real administration, development and integration challenges."
-              action={{ label: 'View all articles', href: '#articles' }}
+              action={{ label: 'View all articles', href: '/articles/' }}
             />
             <div className="articles-grid">
               {latestArticles.map((article, index) => (
@@ -308,11 +401,11 @@ function App() {
                     <span className="article-index">0{index + 1}</span>
                     <span className="article-category">{article.category}</span>
                   </div>
-                  <h3><a href={`#article-${index + 1}`}>{article.title}</a></h3>
+                  <h3><a href="/articles/">{article.title}</a></h3>
                   <p>{article.description}</p>
                   <div className="article-card-footer">
                     <span>{article.date} · {article.readTime}</span>
-                    <a href={`#article-${index + 1}`} aria-label={`Read ${article.title}`}><ArrowIcon /></a>
+                    <a href="/articles/" aria-label={`Read ${article.title}`}><ArrowIcon /></a>
                   </div>
                 </article>
               ))}
@@ -344,7 +437,7 @@ function App() {
               description="Start with a common ARIS topic or browse the complete technical library."
             />
             <div className="topic-links">
-              {topicLinks.map((topic) => <a href="#articles" key={topic}>{topic} <ArrowIcon /></a>)}
+              {topicLinks.map((topic) => <a href="/articles/" key={topic}>{topic} <ArrowIcon /></a>)}
             </div>
           </div>
         </section>
@@ -357,33 +450,219 @@ function App() {
             <p>Tell me what you’re trying to achieve and I’ll let you know whether I can help.</p>
             <div className="hero-actions">
               <a className="button button-primary" href="#contact">Discuss your project <ArrowIcon /></a>
-              <a className="button button-secondary" href="#articles">Browse articles <span aria-hidden="true">→</span></a>
+              <a className="button button-secondary" href="/articles/">Browse articles <span aria-hidden="true">→</span></a>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="site-footer">
-        <div className="content-container footer-main">
-          <div className="footer-brand">
-            <a className="brand" href="#top" aria-label="Aris Technical home">
-              <span className="brand-mark"><BrandMark /></span>
-              <span className="brand-name"><strong>ARIS</strong><span>TECHNICAL</span></span>
-            </a>
-            <p>Practical ARIS technical knowledge and professional consulting.</p>
-          </div>
-          <div className="footer-links">
-            <div><h3>Navigate</h3><a href="#top">Home</a><a href="#articles">Articles</a><a href="#services">Services</a><a href="#contact">Contact</a></div>
-            <div><h3>Technical areas</h3>{articleCategories.map(([title], index) => <a href={`#category-${index + 1}`} key={title}>{title}</a>)}</div>
-          </div>
-        </div>
-        <div className="content-container footer-bottom">
-          <span>© 2026 Aris Technical</span>
-          <span>Built around useful technical knowledge.</span>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
+}
+
+function LibraryArticle({ article }) {
+  const category = categoryPages.find((item) => item.slug === article.category)
+
+  return (
+    <article className="library-article">
+      <div className="library-article-copy">
+        <p className="article-category">{category.shortTitle}</p>
+        <h3>
+          <a href={`/articles/#${category.slug}`}>{article.title}</a>
+        </h3>
+        <p>{article.description}</p>
+      </div>
+      <div className="library-article-meta">
+        <span>{formatArticleDate(article.date)}</span>
+        <span>{article.readTime}</span>
+        <a href={`/articles/#${category.slug}`} aria-label={`Read ${article.title}`}><ArrowIcon /></a>
+      </div>
+    </article>
+  )
+}
+
+function ArticlesPage() {
+  const [articles] = useState(loadArticles)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    const categoryFromHash = window.location.hash.slice(1)
+    return categoryPages.some((category) => category.slug === categoryFromHash) ? categoryFromHash : 'all'
+  })
+  const normalizedQuery = searchQuery.trim().toLowerCase()
+  const publishedArticles = articles.filter((article) => article.status === 'published')
+  const filteredArticles = publishedArticles.filter((article) => {
+    if (selectedCategory !== 'all' && article.category !== selectedCategory) return false
+    if (normalizedQuery) {
+        const category = categoryPages.find((item) => item.slug === article.category)
+        return [article.title, article.description, category.title, ...category.topics]
+          .join(' ')
+          .toLowerCase()
+          .includes(normalizedQuery)
+    }
+    return true
+  })
+
+  const activeCategory = categoryPages.find((category) => category.slug === selectedCategory)
+
+  const selectCategory = (category) => {
+    setSelectedCategory(category)
+    const nextUrl = category === 'all' ? '/articles/' : `/articles/#${category}`
+    window.history.replaceState(null, '', nextUrl)
+  }
+
+  const clearFilters = () => {
+    setSearchQuery('')
+    selectCategory('all')
+  }
+
+  useEffect(() => {
+    const previousTitle = document.title
+    const description = document.querySelector('meta[name="description"]')
+    const previousDescription = description?.getAttribute('content')
+
+    document.title = 'ARIS Technical Articles & Guides | Aris Technical'
+    description?.setAttribute(
+      'content',
+      'Practical ARIS technical articles covering administration, scripting, Process Governance, REST APIs, integrations, installation and setup.',
+    )
+
+    return () => {
+      document.title = previousTitle
+      if (description && previousDescription) description.setAttribute('content', previousDescription)
+    }
+  }, [])
+
+  useEffect(() => {
+    const syncCategoryFromHash = () => {
+      const categoryFromHash = window.location.hash.slice(1)
+      setSelectedCategory(
+        categoryPages.some((category) => category.slug === categoryFromHash) ? categoryFromHash : 'all',
+      )
+    }
+
+    window.addEventListener('hashchange', syncCategoryFromHash)
+    return () => window.removeEventListener('hashchange', syncCategoryFromHash)
+  }, [])
+
+  return (
+    <div className="site-shell articles-page" id="top">
+      <a className="skip-link" href="#main-content">Skip to content</a>
+      <Header currentPage="articles" />
+
+      <main id="main-content">
+        <section className="library-hero" aria-labelledby="articles-title">
+          <div className="stage-glow" aria-hidden="true" />
+          <div className="stage-grid" aria-hidden="true" />
+          <div className="content-container library-hero-content">
+            <nav className="breadcrumbs" aria-label="Breadcrumb">
+              <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Articles</span>
+            </nav>
+            <p className="section-label">Technical library</p>
+            <h1 id="articles-title">ARIS technical articles<br /> <em>built around real problems.</em></h1>
+            <p>
+              Practical guides, examples and troubleshooting notes for ARIS administrators,
+              developers, architects and technical consultants.
+            </p>
+
+            <div className="library-search">
+              <label className="visually-hidden" htmlFor="article-search">Search technical articles</label>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" />
+              </svg>
+              <input
+                id="article-search"
+                type="search"
+                placeholder="Search articles, topics or technical terms..."
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+              />
+              <span>{publishedArticles.length} guides</span>
+            </div>
+          </div>
+        </section>
+
+        <section className="content-section library-list-section" aria-live="polite">
+          <div className="content-container">
+            <div className="library-list-heading">
+              <div>
+                <p className="section-label">{normalizedQuery ? 'Search results' : 'Technical articles'}</p>
+                <h2>{activeCategory ? activeCategory.shortTitle : 'All articles'}</h2>
+              </div>
+              <p>{filteredArticles.length} {filteredArticles.length === 1 ? 'article' : 'articles'} · Newest first</p>
+            </div>
+
+            <div className="article-filter-bar" aria-label="Filter articles by technical area">
+              <button
+                className={selectedCategory === 'all' ? 'is-active' : ''}
+                type="button"
+                aria-pressed={selectedCategory === 'all'}
+                onClick={() => selectCategory('all')}
+              >
+                All articles <span>{publishedArticles.length}</span>
+              </button>
+              {categoryPages.map((category) => {
+                const articleCount = publishedArticles.filter((article) => article.category === category.slug).length
+                return (
+                  <button
+                    className={selectedCategory === category.slug ? 'is-active' : ''}
+                    type="button"
+                    aria-pressed={selectedCategory === category.slug}
+                    onClick={() => selectCategory(category.slug)}
+                    key={category.slug}
+                  >
+                    {category.shortTitle} <span>{articleCount}</span>
+                  </button>
+                )
+              })}
+            </div>
+
+            {(normalizedQuery || selectedCategory !== 'all') && (
+              <div className="active-filter-summary">
+                <span>
+                  Showing {filteredArticles.length} {filteredArticles.length === 1 ? 'result' : 'results'}
+                  {normalizedQuery && <> for “{searchQuery.trim()}”</>}
+                </span>
+                <button type="button" onClick={clearFilters}>Clear filters</button>
+              </div>
+            )}
+
+            {filteredArticles.length > 0 ? (
+              <div className="library-article-list unified-article-list">
+                {filteredArticles.map((article) => <LibraryArticle article={article} key={article.slug} />)}
+              </div>
+            ) : (
+              <div className="empty-results">
+                <span>404</span>
+                <h3>No matching articles yet.</h3>
+                <p>Try another technical area or a broader term such as API, scripting, LDAP, APG or installation.</p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="library-cta">
+          <div className="final-cta-glow" aria-hidden="true" />
+          <div className="content-container library-cta-content">
+            <div>
+              <p className="section-label">Professional support</p>
+              <h2>Can’t find the answer you need?</h2>
+              <p>Tell me about your ARIS technical challenge and I’ll let you know whether I can help.</p>
+            </div>
+            <a className="button button-primary" href="/#contact">Discuss your project <ArrowIcon /></a>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  )
+}
+
+function App() {
+  const path = window.location.pathname
+  if (path === '/admin' || path.startsWith('/admin/')) return <AdminPage />
+  return path === '/articles' || path.startsWith('/articles/') ? <ArticlesPage /> : <HomePage />
 }
 
 export default App
