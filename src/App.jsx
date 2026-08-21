@@ -15,32 +15,32 @@ const expertiseAreas = [
   {
     number: '01',
     title: 'ARIS Administration',
-    description: 'Configuration, users, permissions, authentication and practical troubleshooting for stable ARIS environments.',
-    topics: ['Access control', 'LDAP & SSO', 'Troubleshooting'],
+    description: 'ARIS Method and filter configuration covering model and object types, symbols and conventions—alongside database administration and platform support.',
+    topics: ['ARIS Method & filters', 'Model & object types', 'Symbols & conventions', 'Database administration', 'Access & troubleshooting'],
   },
   {
     number: '02',
     title: 'ARIS Scripting',
-    description: 'Report scripts, macros and JavaScript solutions that turn repetitive tasks into reliable workflows.',
-    topics: ['Report scripts', 'Macros', 'JavaScript'],
+    description: 'Custom reports, macros and JavaScript solutions, including adaptations that keep existing reports working across ARIS version changes.',
+    topics: ['Custom reports', 'Macros', 'JavaScript', 'Java Packages', 'Version compatibility updates'],
   },
   {
     number: '03',
     title: 'APG & Automation',
     description: 'ARIS Process Governance workflows and automation designed around real business processes.',
-    topics: ['APG workflows', 'Approvals', 'Automation'],
+    topics: ['Approval workflows', 'APG development', 'Escalations', 'Automation'],
   },
   {
     number: '04',
     title: 'REST API & Integrations',
     description: 'Connect ARIS to enterprise applications through APIs, synchronized data and custom integrations.',
-    topics: ['REST APIs', 'Repository data', 'System integration'],
+    topics: ['REST APIs', 'Power BI & Tableau', 'CMDB systems', 'Data synchronization'],
   },
   {
     number: '05',
     title: 'Installation & Setup',
     description: 'Infrastructure planning, installation, configuration and technical setup of ARIS environments.',
-    topics: ['Installation', 'Infrastructure', 'Configuration'],
+    topics: ['Installation', 'Configuration', 'Upgrades', 'Environment setup'],
   },
 ]
 
@@ -86,14 +86,64 @@ const topicLinks = [
   'Repository API',
 ]
 
+const serviceAreas = [
+  {
+    number: '01',
+    title: 'ARIS custom reports & scripts',
+    description: 'Purpose-built reports, macros and JavaScript solutions, including adaptations that keep existing reports working across ARIS version changes.',
+    outcomes: ['Custom reports', 'Macros', 'JavaScript', 'Java Packages', 'Version compatibility updates'],
+  },
+  {
+    number: '02',
+    title: 'ARIS Connect Portal customizations',
+    description: 'Portal experiences adapted to the way your users find, understand and work with published ARIS content.',
+    outcomes: ['Layouts & views', 'Custom solutions', 'Customizations'],
+  },
+  {
+    number: '03',
+    title: 'ARIS Process Governance automation',
+    description: 'APG workflows and automated processes designed around clear roles, reliable handovers and maintainable logic.',
+    outcomes: ['Approval workflows', 'APG development', 'Escalations', 'Automation'],
+  },
+  {
+    number: '04',
+    title: 'ARIS integrations',
+    description: 'Reliable data exchange between ARIS and enterprise platforms through REST APIs and appropriate integration patterns.',
+    outcomes: ['REST APIs', 'Power BI & Tableau', 'CMDB systems', 'Data synchronization'],
+  },
+  {
+    number: '05',
+    title: 'ARIS installation & technical setup',
+    description: 'Environment planning, installation, configuration and upgrades with the infrastructure around ARIS taken into account.',
+    outcomes: ['Installation', 'Configuration', 'Upgrades', 'Environment setup'],
+  },
+  {
+    number: '06',
+    title: 'ARIS administration & technical support',
+    description: 'ARIS Method and filter configuration covering model and object types, filters, symbols and modeling conventions—alongside database administration and platform support.',
+    outcomes: ['ARIS Method & filters', 'Model & object types', 'Symbols & conventions', 'Database administration', 'Access & troubleshooting'],
+  },
+]
+
+const contactTopics = [
+  'ARIS administration',
+  'Custom reports & scripts',
+  'Connect Portal customization',
+  'APG & automation',
+  'Integration',
+  'Installation & upgrade',
+  'Troubleshooting or code review',
+  'Another technical challenge',
+]
+
 const categoryPages = [
   {
     slug: 'administration',
     number: '01',
     title: 'ARIS Administration',
     shortTitle: 'Administration',
-    description: 'Configuration, users, permissions, authentication and practical troubleshooting for stable ARIS environments.',
-    topics: ['Users & groups', 'LDAP & SSO', 'Permissions', 'Troubleshooting'],
+    description: 'ARIS Method and filter configuration, databases, access, authentication and practical troubleshooting for stable ARIS environments.',
+    topics: ['Method & filters', 'Model & object types', 'Databases', 'Access & troubleshooting'],
   },
   {
     slug: 'scripting',
@@ -254,8 +304,20 @@ function Header({ currentPage = 'home' }) {
             </div>
           </div>
 
-          <a className="nav-link" href="/#services" onClick={closeNavigation}>Services</a>
-          <a className="contact-link" href="/#contact" onClick={closeNavigation}>
+          <a
+            className={`nav-link${currentPage === 'services' ? ' is-active' : ''}`}
+            href="/services/"
+            aria-current={currentPage === 'services' ? 'page' : undefined}
+            onClick={closeNavigation}
+          >
+            Services
+          </a>
+          <a
+            className={`contact-link${currentPage === 'contact' ? ' is-active' : ''}`}
+            href="/contact/"
+            aria-current={currentPage === 'contact' ? 'page' : undefined}
+            onClick={closeNavigation}
+          >
             Discuss a project <ArrowIcon />
           </a>
         </nav>
@@ -293,8 +355,8 @@ function Footer() {
             <h3>Navigate</h3>
             <a href="/">Home</a>
             <a href="/articles/">Articles</a>
-            <a href="/#services">Services</a>
-            <a href="/#contact">Contact</a>
+            <a href="/services/">Services</a>
+            <a href="/contact/">Contact</a>
           </div>
           <div>
             <h3>Technical areas</h3>
@@ -331,7 +393,7 @@ function HomePage() {
             </p>
             <div className="hero-actions">
               <a className="button button-primary" href="/articles/">Explore technical articles <span aria-hidden="true">→</span></a>
-              <a className="button button-secondary" href="#contact">Discuss your project <ArrowIcon /></a>
+              <a className="button button-secondary" href="/contact/">Discuss your project <ArrowIcon /></a>
             </div>
             <div className="hero-topics" aria-label="Core areas of expertise">
               <span>Administration</span><i />
@@ -419,7 +481,7 @@ function HomePage() {
               <p className="section-label">Professional services</p>
               <h2>Need help with an ARIS technical challenge?</h2>
               <p>I provide focused technical consulting and development for integrations, automation, scripting, administration and custom ARIS solutions.</p>
-              <a className="button button-primary" href="#contact">Discuss your project <ArrowIcon /></a>
+              <a className="button button-primary" href="/services/">Explore services <ArrowIcon /></a>
             </div>
             <div className="work-steps" aria-label="How I can help">
               <div><span>01</span><h3>Diagnose</h3><p>Investigate technical problems, constraints and existing environments.</p></div>
@@ -449,7 +511,7 @@ function HomePage() {
             <h2>Have an ARIS technical problem?</h2>
             <p>Tell me what you’re trying to achieve and I’ll let you know whether I can help.</p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#contact">Discuss your project <ArrowIcon /></a>
+              <a className="button button-primary" href="/contact/">Discuss your project <ArrowIcon /></a>
               <a className="button button-secondary" href="/articles/">Browse articles <span aria-hidden="true">→</span></a>
             </div>
           </div>
@@ -649,7 +711,313 @@ function ArticlesPage() {
               <h2>Can’t find the answer you need?</h2>
               <p>Tell me about your ARIS technical challenge and I’ll let you know whether I can help.</p>
             </div>
-            <a className="button button-primary" href="/#contact">Discuss your project <ArrowIcon /></a>
+            <a className="button button-primary" href="/contact/">Discuss your project <ArrowIcon /></a>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  )
+}
+
+function ServicesPage() {
+  useEffect(() => {
+    const previousTitle = document.title
+    const description = document.querySelector('meta[name="description"]')
+    const previousDescription = description?.getAttribute('content')
+
+    document.title = 'ARIS Technical Services & Development | Aris Technical'
+    description?.setAttribute(
+      'content',
+      'Professional ARIS services for scripting, Connect Portal customization, Process Governance, integrations, installations, administration, troubleshooting and code improvement.',
+    )
+
+    return () => {
+      document.title = previousTitle
+      if (description && previousDescription) description.setAttribute('content', previousDescription)
+    }
+  }, [])
+
+  return (
+    <div className="site-shell services-page" id="top">
+      <a className="skip-link" href="#main-content">Skip to content</a>
+      <Header currentPage="services" />
+
+      <main id="main-content">
+        <section className="service-hero" aria-labelledby="services-title">
+          <div className="stage-glow" aria-hidden="true" />
+          <div className="stage-grid" aria-hidden="true" />
+          <div className="content-container service-hero-layout">
+            <div className="service-hero-copy">
+              <nav className="breadcrumbs" aria-label="Breadcrumb">
+                <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Services</span>
+              </nav>
+              <p className="section-label">ARIS technical services</p>
+              <h1 id="services-title">Build what ARIS needs.<br />{' '}<em>Fix what holds it back.</em></h1>
+              <p>
+                Technical development, improvements and project delivery—together with practical help
+                for bugs, difficult platform problems and existing code that needs another look.
+              </p>
+              <div className="hero-actions">
+                <a className="button button-primary" href="#service-areas">Explore services <span aria-hidden="true">↓</span></a>
+                <a className="button button-secondary" href="/contact/">Discuss your challenge <ArrowIcon /></a>
+              </div>
+            </div>
+
+            <div className="service-scope-panel" aria-label="Available ARIS technical support">
+              <div className="scope-panel-bar">
+                <span><i /><i /><i /></span>
+                <small>technical_scope.json</small>
+                <b><i /> Available</b>
+              </div>
+              <div className="scope-panel-content">
+                <p><span>01</span><strong>Develop</strong><small>Custom technical solutions</small></p>
+                <p><span>02</span><strong>Integrate</strong><small>ARIS and connected systems</small></p>
+                <p><span>03</span><strong>Diagnose</strong><small>Bugs and complex problems</small></p>
+                <p><span>04</span><strong>Improve</strong><small>Reviews and refactoring</small></p>
+              </div>
+              <div className="scope-panel-footer"><span>ARIS technical delivery</span><strong>6 service areas</strong></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="content-section service-areas-section" id="service-areas">
+          <div className="content-container">
+            <SectionHeading
+              label="Key services"
+              title="Technical expertise, applied to real work."
+              description="From focused development tasks to larger technical projects, each service is grounded in practical ARIS implementation experience."
+            />
+            <div className="service-area-grid">
+              {serviceAreas.map((service) => (
+                <article className="service-area-card" key={service.number}>
+                  <div className="service-area-card-top">
+                    <span>{service.number}</span>
+                    <i aria-hidden="true" />
+                  </div>
+                  <h2>{service.title}</h2>
+                  <p>{service.description}</p>
+                  <ul aria-label={`${service.title} capabilities`}>
+                    {service.outcomes.map((outcome) => <li key={outcome}>{outcome}</li>)}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="content-section problem-solving-section">
+          <div className="content-container problem-solving-layout">
+            <div className="problem-solving-copy">
+              <p className="section-label">Problem solving & improvement</p>
+              <h2>Not every engagement starts with a new project.</h2>
+              <p>
+                Sometimes something is broken, unreliable or simply harder to maintain than it should be.
+                Existing ARIS solutions can be investigated and improved without rebuilding everything from scratch.
+              </p>
+              <div className="problem-services">
+                <div><span>01</span><h3>Technical problem solving</h3><p>Trace configuration, data, integration and environment issues to their actual cause.</p></div>
+                <div><span>02</span><h3>Bug fixing</h3><p>Reproduce unexpected behavior, isolate failures and implement a focused correction.</p></div>
+                <div><span>03</span><h3>ARIS code reviews</h3><p>Review scripts, reports and automation for correctness, clarity and maintainability.</p></div>
+                <div><span>04</span><h3>Code refactoring</h3><p>Restructure existing code to make future changes safer, clearer and easier to support.</p></div>
+              </div>
+            </div>
+
+            <div className="review-window" aria-label="Example ARIS code review">
+              <div className="code-window-bar"><i /><i /><i /><span>report-script.js · review</span></div>
+              <div className="review-summary">
+                <span>TECHNICAL REVIEW</span>
+                <strong>Existing solution</strong>
+                <small>Analysis before change</small>
+              </div>
+              <pre><code><span className="review-line neutral"><i>01</i> Understand expected behavior</span>{'\n'}<span className="review-line removed"><i>02</i> - repeated query inside loop</span>{'\n'}<span className="review-line added"><i>03</i> + reusable data retrieval</span>{'\n'}<span className="review-line added"><i>04</i> + explicit error handling</span>{'\n'}<span className="review-line neutral"><i>05</i> Verify output and edge cases</span></code></pre>
+              <div className="review-result"><span><i /> Review complete</span><strong>Clearer · safer · maintainable</strong></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="service-final-cta" id="service-contact">
+          <div className="final-cta-glow" aria-hidden="true" />
+          <div className="content-container service-final-cta-content">
+            <p className="section-label">Start with the problem</p>
+            <h2>Have an ARIS technical challenge?</h2>
+            <p>Tell me what you are trying to build, improve or fix and I&apos;ll let you know whether I can help.</p>
+            <div className="hero-actions">
+              <a className="button button-primary" href="/contact/">Discuss your project <ArrowIcon /></a>
+              <a className="button button-secondary" href="/articles/">Browse technical articles <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  )
+}
+
+function ContactPage() {
+  const [submitState, setSubmitState] = useState('idle')
+  const [submitMessage, setSubmitMessage] = useState('')
+
+  useEffect(() => {
+    const previousTitle = document.title
+    const description = document.querySelector('meta[name="description"]')
+    const previousDescription = description?.getAttribute('content')
+
+    document.title = 'Discuss Your ARIS Project | Aris Technical'
+    description?.setAttribute(
+      'content',
+      'Get in touch about ARIS administration, scripting, Connect Portal customization, Process Governance, integrations, installations or another technical challenge.',
+    )
+
+    return () => {
+      document.title = previousTitle
+      if (description && previousDescription) description.setAttribute('content', previousDescription)
+    }
+  }, [])
+
+  const submitContactForm = async (event) => {
+    event.preventDefault()
+    const form = event.currentTarget
+    const formData = new FormData(form)
+
+    if (formData.get('website')) {
+      setSubmitState('success')
+      setSubmitMessage('Thank you. Your message has been received.')
+      form.reset()
+      return
+    }
+
+    const inquiry = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      company: formData.get('company'),
+      topic: formData.get('topic'),
+      message: formData.get('message'),
+    }
+    const endpoint = import.meta.env.VITE_CONTACT_FORM_ENDPOINT?.trim()
+    const contactEmail = import.meta.env.VITE_CONTACT_EMAIL?.trim()
+
+    setSubmitState('sending')
+    setSubmitMessage('Sending your message…')
+
+    if (endpoint) {
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(inquiry),
+        })
+
+        if (!response.ok) throw new Error('Contact request failed')
+        form.reset()
+        setSubmitState('success')
+        setSubmitMessage('Message successfully sent. Thank you for getting in touch.')
+        return
+      } catch {
+        setSubmitState('error')
+        setSubmitMessage('The message could not be sent. Please try again in a moment.')
+        return
+      }
+    }
+
+    if (contactEmail) {
+      const subject = encodeURIComponent(`[Aris Technical] ${inquiry.topic} — ${inquiry.name}`)
+      const body = encodeURIComponent(
+        `Name: ${inquiry.name}\nEmail: ${inquiry.email}\nCompany: ${inquiry.company || 'Not provided'}\nTopic: ${inquiry.topic}\n\n${inquiry.message}`,
+      )
+      window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`
+      setSubmitState('success')
+      setSubmitMessage('Your email application should now open with the project details prepared.')
+      return
+    }
+
+    setSubmitState('error')
+    setSubmitMessage('Email delivery is not configured yet. Add the contact endpoint or recipient email before publishing this form.')
+  }
+
+  return (
+    <div className="site-shell contact-page" id="top">
+      <a className="skip-link" href="#main-content">Skip to content</a>
+      <Header currentPage="contact" />
+
+      <main id="main-content">
+        <section className="contact-section" aria-labelledby="contact-title">
+          <div className="stage-glow" aria-hidden="true" />
+          <div className="stage-grid" aria-hidden="true" />
+          <div className="content-container contact-layout">
+            <div className="contact-copy">
+              <nav className="breadcrumbs" aria-label="Breadcrumb">
+                <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Contact</span>
+              </nav>
+              <p className="section-label">Discuss your ARIS challenge</p>
+              <h1 id="contact-title">Let&apos;s talk about your<br />{' '}<em>ARIS challenge.</em></h1>
+              <p>
+                Need help with administration, scripting, automation, integrations or another technical problem?
+                Share the context and what you are trying to achieve.
+              </p>
+
+              <div className="contact-expectations" aria-label="What happens next">
+                <div><span>01</span><p><strong>Describe the challenge</strong><small>A short overview is enough to start.</small></p></div>
+                <div><span>02</span><p><strong>I&apos;ll review the context</strong><small>You&apos;ll hear whether and how I can help.</small></p></div>
+                <div><span>03</span><p><strong>Define the next step</strong><small>No generic proposal before the problem is clear.</small></p></div>
+              </div>
+            </div>
+
+            <div className="contact-form-panel">
+              <div className="contact-form-heading">
+                <span>Technical request</span>
+                <i><b /> Direct inquiry</i>
+              </div>
+              <form className="contact-form" onSubmit={submitContactForm}>
+                <div className="contact-form-row">
+                  <label>
+                    <span className="contact-field-label">Name <i aria-hidden="true">*</i></span>
+                    <input name="name" type="text" autoComplete="name" placeholder="Your name" minLength="2" maxLength="100" required />
+                  </label>
+                  <label>
+                    <span className="contact-field-label">Email <i aria-hidden="true">*</i></span>
+                    <input name="email" type="email" autoComplete="email" placeholder="you@email.com" maxLength="254" required />
+                  </label>
+                </div>
+                <label>
+                  Company (optional)
+                  <input name="company" type="text" autoComplete="organization" placeholder="Company or organization" maxLength="120" />
+                </label>
+                <label>
+                  <span className="contact-field-label">What do you need help with? <i aria-hidden="true">*</i></span>
+                  <select name="topic" defaultValue="" required>
+                    <option value="" disabled>Select a technical area</option>
+                    {contactTopics.map((topic) => <option value={topic} key={topic}>{topic}</option>)}
+                  </select>
+                </label>
+                <label>
+                  <span className="contact-field-label">Tell me about the challenge <i aria-hidden="true">*</i></span>
+                  <textarea
+                    name="message"
+                    rows="7"
+                    minLength="20"
+                    maxLength="5000"
+                    placeholder="Tell me about the current situation, the expected result and anything that may help explain the challenge."
+                    required
+                  />
+                </label>
+                <label className="contact-honeypot" aria-hidden="true">
+                  Website
+                  <input name="website" type="text" tabIndex="-1" autoComplete="off" />
+                </label>
+                <div className="contact-form-footer">
+                  <p>Your details will only be used to respond to this inquiry.</p>
+                  <button className="button button-primary" type="submit" disabled={submitState === 'sending'}>
+                    {submitState === 'sending' ? 'Sending…' : 'Send message'} <ArrowIcon />
+                  </button>
+                </div>
+                {submitMessage && (
+                  <p className={`contact-form-status is-${submitState}`} role="status" aria-live="polite">{submitMessage}</p>
+                )}
+              </form>
+            </div>
           </div>
         </section>
       </main>
@@ -662,7 +1030,10 @@ function ArticlesPage() {
 function App() {
   const path = window.location.pathname
   if (path === '/admin' || path.startsWith('/admin/')) return <AdminPage />
-  return path === '/articles' || path.startsWith('/articles/') ? <ArticlesPage /> : <HomePage />
+  if (path === '/articles' || path.startsWith('/articles/')) return <ArticlesPage />
+  if (path === '/services' || path.startsWith('/services/')) return <ServicesPage />
+  if (path === '/contact' || path.startsWith('/contact/')) return <ContactPage />
+  return <HomePage />
 }
 
 export default App
