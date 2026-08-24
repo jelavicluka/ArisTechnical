@@ -10,6 +10,11 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.next
+media
+.payload-source
+.payload-template
+*.tsbuildinfo
 *.local
 
 # Editor directories and files

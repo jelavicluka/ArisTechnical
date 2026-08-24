@@ -1,0 +1,14 @@
+:root {
+  --theme-elevation-0: #0a090e;
+  --theme-elevation-50: #0e0d13;
+  --theme-elevation-100: #14121a;
+  --theme-elevation-150: #1b1821;
+  --theme-elevation-200: #24202c;
+  --theme-success-500: #62b68f;
+}
+
+[data-theme='dark'] {
+  --theme-elevation-800: #d9d3df;
+  --theme-elevation-900: #eeeaf1;
+  --theme-elevation-1000: #ffffff;
+}
