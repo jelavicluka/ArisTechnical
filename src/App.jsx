@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import AdminPage from './AdminPage.jsx'
 import { formatArticleDate, loadArticles } from './articleStore.js'
@@ -79,14 +79,24 @@ const latestArticles = [
   },
 ]
 
-function articleDetailHref(slug) {
-  const configuredOrigin = import.meta.env.VITE_ARTICLE_DETAIL_ORIGIN?.replace(/\/$/, '')
+function contentPlatformOrigin() {
+  const configuredOrigin = (
+    import.meta.env.VITE_CONTENT_PLATFORM_ORIGIN || import.meta.env.VITE_ARTICLE_DETAIL_ORIGIN
+  )?.replace(/\/$/, '')
   const isSeparateLocalFrontend = ['5173', '5174'].includes(window.location.port)
   const localOrigin = isSeparateLocalFrontend
     ? `${window.location.protocol}//${window.location.hostname}:3000`
     : ''
 
-  return `${configuredOrigin || localOrigin}/articles/${slug}`
+  return configuredOrigin || localOrigin
+}
+
+function articleDetailHref(slug) {
+  return `${contentPlatformOrigin()}/articles/${slug}`
+}
+
+function articleSearchEndpoint(query) {
+  return `${contentPlatformOrigin()}/api/article-search?q=${encodeURIComponent(query)}`
 }
 
 const topicLinks = [
@@ -388,6 +398,179 @@ function Footer() {
   )
 }
 
+function HighlightSearchTerm({ query, text }) {
+  const matchIndex = text.toLocaleLowerCase().indexOf(query.trim().toLocaleLowerCase())
+  if (matchIndex < 0 || !query.trim()) return text
+
+  const matchEnd = matchIndex + query.trim().length
+  return (
+    <>
+      {text.slice(0, matchIndex)}
+      <mark>{text.slice(matchIndex, matchEnd)}</mark>
+      {text.slice(matchEnd)}
+    </>
+  )
+}
+
+function HomeArticleSearch() {
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState([])
+  const [searchState, setSearchState] = useState('idle')
+  const [activeIndex, setActiveIndex] = useState(-1)
+  const [isOpen, setIsOpen] = useState(false)
+  const searchRef = useRef(null)
+  const normalizedQuery = query.trim()
+
+  useEffect(() => {
+    const closeOnOutsideClick = (event) => {
+      if (!searchRef.current?.contains(event.target)) setIsOpen(false)
+    }
+
+    document.addEventListener('pointerdown', closeOnOutsideClick)
+    return () => document.removeEventListener('pointerdown', closeOnOutsideClick)
+  }, [])
+
+  useEffect(() => {
+    if (normalizedQuery.length < 2) {
+      setResults([])
+      setSearchState('idle')
+      setActiveIndex(-1)
+      return undefined
+    }
+
+    const controller = new AbortController()
+    const searchTimer = window.setTimeout(async () => {
+      setSearchState('loading')
+      setIsOpen(true)
+
+      try {
+        const response = await fetch(articleSearchEndpoint(normalizedQuery), {
+          signal: controller.signal,
+        })
+
+        if (!response.ok) throw new Error('Article search failed.')
+
+        const data = await response.json()
+        setResults(data.results)
+        setActiveIndex(data.results.length > 0 ? 0 : -1)
+        setSearchState('ready')
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          setResults([])
+          setActiveIndex(-1)
+          setSearchState('error')
+        }
+      }
+    }, 220)
+
+    return () => {
+      controller.abort()
+      window.clearTimeout(searchTimer)
+    }
+  }, [normalizedQuery])
+
+  const openResult = (index) => {
+    const result = results[index]
+    if (result) window.location.assign(articleDetailHref(result.slug))
+  }
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'ArrowDown' && results.length > 0) {
+      event.preventDefault()
+      setIsOpen(true)
+      setActiveIndex((current) => (current + 1) % results.length)
+    } else if (event.key === 'ArrowUp' && results.length > 0) {
+      event.preventDefault()
+      setIsOpen(true)
+      setActiveIndex((current) => (current <= 0 ? results.length - 1 : current - 1))
+    } else if (event.key === 'Enter' && activeIndex >= 0) {
+      event.preventDefault()
+      openResult(activeIndex)
+    } else if (event.key === 'Escape') {
+      setIsOpen(false)
+      setActiveIndex(-1)
+    }
+  }
+
+  const clearSearch = () => {
+    setQuery('')
+    setResults([])
+    setIsOpen(false)
+    setActiveIndex(-1)
+  }
+
+  return (
+    <div className="home-article-search" ref={searchRef}>
+      <label htmlFor="home-article-search">Search the technical library</label>
+      <div className={`home-search-field${isOpen ? ' is-open' : ''}`}>
+        <svg className="home-search-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" />
+        </svg>
+        <input
+          id="home-article-search"
+          type="search"
+          role="combobox"
+          autoComplete="off"
+          aria-autocomplete="list"
+          aria-controls="home-search-suggestions"
+          aria-expanded={isOpen && normalizedQuery.length >= 2}
+          aria-activedescendant={activeIndex >= 0 ? `home-search-result-${activeIndex}` : undefined}
+          placeholder="Search articles, technical topics or source code..."
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          onFocus={() => normalizedQuery.length >= 2 && setIsOpen(true)}
+          onKeyDown={handleKeyDown}
+        />
+        {searchState === 'loading' ? <span className="home-search-loader" aria-label="Searching" /> : null}
+        {query ? (
+          <button className="home-search-clear" type="button" aria-label="Clear search" onClick={clearSearch}>×</button>
+        ) : (
+          <span className="home-search-shortcut">Titles · text · code</span>
+        )}
+      </div>
+
+      {isOpen && normalizedQuery.length >= 2 ? (
+        <div className="home-search-suggestions" id="home-search-suggestions" role="listbox">
+          {searchState === 'loading' ? (
+            <p className="home-search-message">Searching the technical library…</p>
+          ) : null}
+          {searchState === 'error' ? (
+            <p className="home-search-message is-error">Search is temporarily unavailable.</p>
+          ) : null}
+          {searchState === 'ready' && results.length === 0 ? (
+            <p className="home-search-message">No articles match “{normalizedQuery}”.</p>
+          ) : null}
+          {results.map((result, index) => (
+            <a
+              className={`home-search-result${activeIndex === index ? ' is-active' : ''}`}
+              href={articleDetailHref(result.slug)}
+              id={`home-search-result-${index}`}
+              key={result.slug}
+              role="option"
+              aria-selected={activeIndex === index}
+              onMouseEnter={() => setActiveIndex(index)}
+            >
+              <span className="home-search-result-topline">
+                <span>{result.category}</span>
+                <small className={result.matchSource === 'Code' ? 'is-code-match' : ''}>
+                  Match in {result.matchSource.toLocaleLowerCase()}
+                </small>
+              </span>
+              <strong><HighlightSearchTerm query={normalizedQuery} text={result.title} /></strong>
+              <p className={result.matchSource === 'Code' ? 'is-code-snippet' : ''}>
+                <HighlightSearchTerm query={normalizedQuery} text={result.snippet} />
+              </p>
+            </a>
+          ))}
+          {searchState === 'ready' && results.length > 0 ? (
+            <div className="home-search-hint"><span>↑↓ Navigate</span><span>Enter to open</span></div>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
 function HomePage() {
   return (
     <div className="site-shell" id="top">
@@ -405,6 +588,7 @@ function HomePage() {
               Practical technical guides, solutions and professional support for ARIS administration,
               development, automation and integration.
             </p>
+            <HomeArticleSearch />
             <div className="hero-actions">
               <a className="button button-primary" href="/articles/">Explore technical articles <span aria-hidden="true">→</span></a>
               <a className="button button-secondary" href="/contact/">Discuss your project <ArrowIcon /></a>
