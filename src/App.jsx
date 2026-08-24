@@ -46,6 +46,7 @@ const expertiseAreas = [
 
 const latestArticles = [
   {
+    slug: 'retrieve-models-rest-api',
     category: 'REST API & Integrations',
     title: 'How to Retrieve ARIS Models Using the REST API',
     description: 'A practical walkthrough of authentication, repository access and model data retrieval.',
@@ -53,6 +54,7 @@ const latestArticles = [
     readTime: '9 min read',
   },
   {
+    slug: 'ldap-user-synchronization',
     category: 'ARIS Administration',
     title: 'Configure LDAP User Synchronization in ARIS',
     description: 'Understand the core settings, mappings and checks needed for reliable LDAP synchronization.',
@@ -60,6 +62,7 @@ const latestArticles = [
     readTime: '11 min read',
   },
   {
+    slug: 'export-model-data-excel',
     category: 'ARIS Scripting',
     title: 'Export ARIS Model Data to Excel with a Report Script',
     description: 'Build a reusable report script that turns model and object data into a structured export.',
@@ -67,6 +70,7 @@ const latestArticles = [
     readTime: '13 min read',
   },
   {
+    slug: 'apg-approval-workflow',
     category: 'APG & Automation',
     title: 'Building an Approval Workflow with ARIS Process Governance',
     description: 'A technical introduction to workflow structure, roles, triggers and error handling in APG.',
@@ -74,6 +78,16 @@ const latestArticles = [
     readTime: '10 min read',
   },
 ]
+
+function articleDetailHref(slug) {
+  const configuredOrigin = import.meta.env.VITE_ARTICLE_DETAIL_ORIGIN?.replace(/\/$/, '')
+  const isSeparateLocalFrontend = ['5173', '5174'].includes(window.location.port)
+  const localOrigin = isSeparateLocalFrontend
+    ? `${window.location.protocol}//${window.location.hostname}:3000`
+    : ''
+
+  return `${configuredOrigin || localOrigin}/articles/${slug}`
+}
 
 const topicLinks = [
   'REST API authentication',
@@ -442,7 +456,7 @@ function HomePage() {
                 <h2 id="featured-title">ARIS Repository API Authentication: Guide and Examples</h2>
                 <p>Learn how authentication works, structure requests correctly and diagnose the most common authorization failures.</p>
                 <div className="article-meta"><span>14 min read</span><span>Updated 18 Aug 2026</span></div>
-                <a className="button button-primary" href="#featured-article">Read the complete guide <span aria-hidden="true">→</span></a>
+                <a className="button button-primary" href={articleDetailHref('repository-api-authentication')}>Read the complete guide <span aria-hidden="true">→</span></a>
               </div>
             </article>
           </div>
@@ -463,11 +477,11 @@ function HomePage() {
                     <span className="article-index">0{index + 1}</span>
                     <span className="article-category">{article.category}</span>
                   </div>
-                  <h3><a href="/articles/">{article.title}</a></h3>
+                  <h3><a href={articleDetailHref(article.slug)}>{article.title}</a></h3>
                   <p>{article.description}</p>
                   <div className="article-card-footer">
                     <span>{article.date} · {article.readTime}</span>
-                    <a href="/articles/" aria-label={`Read ${article.title}`}><ArrowIcon /></a>
+                    <a href={articleDetailHref(article.slug)} aria-label={`Read ${article.title}`}><ArrowIcon /></a>
                   </div>
                 </article>
               ))}
@@ -525,20 +539,21 @@ function HomePage() {
 
 function LibraryArticle({ article }) {
   const category = categoryPages.find((item) => item.slug === article.category)
+  const detailHref = articleDetailHref(article.slug)
 
   return (
     <article className="library-article">
       <div className="library-article-copy">
         <p className="article-category">{category.shortTitle}</p>
         <h3>
-          <a href={`/articles/#${category.slug}`}>{article.title}</a>
+          <a href={detailHref}>{article.title}</a>
         </h3>
         <p>{article.description}</p>
       </div>
       <div className="library-article-meta">
         <span>{formatArticleDate(article.date)}</span>
         <span>{article.readTime}</span>
-        <a href={`/articles/#${category.slug}`} aria-label={`Read ${article.title}`}><ArrowIcon /></a>
+        <a href={detailHref} aria-label={`Read ${article.title}`}><ArrowIcon /></a>
       </div>
     </article>
   )

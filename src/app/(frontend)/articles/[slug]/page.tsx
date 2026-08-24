@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { ArticleContent } from '@/components/article/ArticleContent'
@@ -59,20 +58,23 @@ export default async function ArticlePage({ params }: PageProps) {
 
   const category = isCategory(article.category) ? article.category : null
   const publicationDate = article.publishedAt || article.createdAt
+  const websiteURL = process.env.WEBSITE_URL?.replace(/\/$/, '') || ''
+  const homeHref = websiteURL || '/'
+  const articlesHref = `${websiteURL}/articles/`
 
   return (
     <div className={styles.articlePage}>
       <header className={styles.siteHeader}>
-        <Link className={styles.brandLink} href="/" aria-label="Technical library home">
+        <a className={styles.brandLink} href={homeHref} aria-label="Technical library home">
           <img src="/aris-technical-mark.svg" alt="" width="31" height="31" />
           <span>Technical library</span>
-        </Link>
-        <Link className={styles.backLink} href="/">
+        </a>
+        <a className={styles.backLink} href={articlesHref}>
           <svg aria-hidden="true" viewBox="0 0 16 16">
             <path d="m10 3-5 5 5 5" />
           </svg>
-          Back to home
-        </Link>
+          Back to articles
+        </a>
       </header>
 
       <main>
@@ -108,7 +110,7 @@ export default async function ArticlePage({ params }: PageProps) {
               <span>End of article</span>
               <p>Looking for another technical topic?</p>
             </div>
-            <Link href="/">Return to the technical library</Link>
+            <a href={articlesHref}>Return to the technical library</a>
           </footer>
         </article>
       </main>
