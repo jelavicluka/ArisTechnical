@@ -353,7 +353,7 @@
 
 .codeLine:hover { background: rgba(167, 108, 255, 0.035); }
 
-.codeLine > span:last-child {
+.codeText {
   padding: 0 28px 0 20px;
   display: table-cell;
   white-space: pre;
@@ -522,7 +522,7 @@
   .copyButton { padding: 0 8px; }
   .copyButton span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .codeViewport pre { font-size: 11px; }
-  .codeLine > span:last-child { padding-right: 18px; padding-left: 15px; }
+  .codeText { padding-right: 18px; padding-left: 15px; }
   .lineNumber { padding-right: 12px; padding-left: 13px; }
   .codeCollapsed { max-height: 390px; }
 
