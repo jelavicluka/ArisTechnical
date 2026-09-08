@@ -102,29 +102,11 @@ const findMatch = (article: Article, query: string): SearchResult | null => {
   }
 }
 
-const corsHeaders = (request: NextRequest): Record<string, string> => {
-  const origin = request.headers.get('origin')
-  const websiteURL = process.env.WEBSITE_URL?.replace(/\/$/, '')
-  const isLocalPreview = Boolean(origin && /^http:\/\/(localhost|127\.0\.0\.1):517[34]$/.test(origin))
-
-  if (!origin || (origin !== websiteURL && !isLocalPreview)) return {}
-
-  return {
-    'Access-Control-Allow-Origin': origin,
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    Vary: 'Origin',
-  }
-}
-
-export const OPTIONS = (request: NextRequest) =>
-  new NextResponse(null, { headers: corsHeaders(request), status: 204 })
-
 export async function GET(request: NextRequest) {
   const query = normalize(request.nextUrl.searchParams.get('q') || '').slice(0, 80).toLocaleLowerCase()
 
   if (query.length < 2) {
-    return NextResponse.json({ query, results: [] }, { headers: corsHeaders(request) })
+    return NextResponse.json({ query, results: [] })
   }
 
   const payload = await getPayload({ config })
@@ -148,13 +130,5 @@ export async function GET(request: NextRequest) {
     .slice(0, 6)
     .map(({ score: _score, ...result }) => result)
 
-  return NextResponse.json(
-    { query, results },
-    {
-      headers: {
-        ...corsHeaders(request),
-        'Cache-Control': 'no-store',
-      },
-    },
-  )
+  return NextResponse.json({ query, results }, { headers: { 'Cache-Control': 'no-store' } })
 }

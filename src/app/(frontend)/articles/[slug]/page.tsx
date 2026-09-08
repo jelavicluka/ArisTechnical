@@ -2,8 +2,11 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { ArticleContent } from '@/components/article/ArticleContent'
+import { SiteFooter } from '@/components/site/SiteFooter'
+import { SiteHeader } from '@/components/site/SiteHeader'
 import type { Category, Media } from '@/payload-types'
 import { getArticleBySlug } from '@/utilities/getArticleBySlug'
+import { getArticleLibrary } from '@/utilities/getArticleLibrary'
 
 import styles from '@/components/article/article.module.css'
 
@@ -52,30 +55,47 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ArticlePage({ params }: PageProps) {
   const { slug } = await params
-  const article = await getArticleBySlug(slug)
+  const [article, library] = await Promise.all([getArticleBySlug(slug), getArticleLibrary()])
 
   if (!article) notFound()
 
   const category = isCategory(article.category) ? article.category : null
   const publicationDate = article.publishedAt || article.createdAt
-  const websiteURL = process.env.WEBSITE_URL?.replace(/\/$/, '') || ''
-  const homeHref = websiteURL || '/'
-  const articlesHref = `${websiteURL}/articles/`
+  const articlesHref = '/articles'
+  const serverURL = (process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000').replace(/\/$/, '')
+  const canonicalURL = article.seo?.canonicalURL || `${serverURL}/articles/${article.slug}`
+  const socialImage = isMedia(article.seo?.socialImage)
+    ? article.seo.socialImage
+    : isMedia(article.featuredImage)
+      ? article.featuredImage
+      : null
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    author: article.authorName
+      ? {
+          '@type': 'Person',
+          name: article.authorName,
+        }
+      : undefined,
+    dateModified: article.updatedAt,
+    datePublished: publicationDate,
+    description: article.seo?.description || article.summary,
+    headline: article.seo?.title || article.title,
+    image: socialImage?.url || undefined,
+    mainEntityOfPage: canonicalURL,
+    url: canonicalURL,
+  }
 
   return (
     <div className={styles.articlePage}>
-      <header className={styles.siteHeader}>
-        <a className={styles.brandLink} href={homeHref} aria-label="Technical library home">
-          <img src="/aris-technical-mark.svg" alt="" width="31" height="31" />
-          <span>Technical library</span>
-        </a>
-        <a className={styles.backLink} href={articlesHref}>
-          <svg aria-hidden="true" viewBox="0 0 16 16">
-            <path d="m10 3-5 5 5 5" />
-          </svg>
-          Back to articles
-        </a>
-      </header>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData).replace(/</g, '\\u003c'),
+        }}
+      />
+      <SiteHeader categories={library.categories} currentPage="articles" />
 
       <main>
         <article>
@@ -114,6 +134,7 @@ export default async function ArticlePage({ params }: PageProps) {
           </footer>
         </article>
       </main>
+      <SiteFooter categories={library.categories} />
     </div>
   )
 }

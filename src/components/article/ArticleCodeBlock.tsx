@@ -90,16 +90,16 @@ export const ArticleCodeBlock = ({ caption, code, filename, language }: CodeCont
 
                     return (
                       <span
+                        key={`${index}-${lines[index] || ''}`}
                         {...lineProps}
                         className={`${lineProps.className} ${styles.codeLine}`}
-                        key={`${index}-${lines[index] || ''}`}
                       >
                         <span className={styles.lineNumber} aria-hidden="true">
                           {index + 1}
                         </span>
                         <span className={styles.codeText}>
                           {line.map((token, tokenIndex) => (
-                            <span {...getTokenProps({ token })} key={tokenIndex} />
+                            <span key={tokenIndex} {...getTokenProps({ token })} />
                           ))}
                         </span>
                       </span>

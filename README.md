@@ -1,8 +1,6 @@
 # Technical Content Platform
 
-Migration foundation for the website's production content platform. It combines Next.js and Payload CMS with PostgreSQL, optional S3-compatible object storage, and a single-administrator editorial workflow.
-
-The existing Vite implementation remains preserved in this migration branch while pages are moved incrementally.
+Production content platform built with Next.js and Payload CMS, PostgreSQL, optional S3-compatible object storage, Resend contact delivery, and a single-administrator editorial workflow.
 
 ## Included foundation
 
@@ -13,7 +11,7 @@ The existing Vite implementation remains preserved in this migration branch whil
 - Public access limited to published articles; all content changes require authentication
 - Optional S3-compatible storage configuration for Cloudflare R2 or another provider
 - Five agreed article categories as repeatable seed data
-- Public indexing disabled on the temporary migration shell until the real pages and public identity are ready
+- Public indexing disabled until the production domain and public identity are ready
 
 ## Local configuration
 
@@ -25,7 +23,7 @@ PAYLOAD_SECRET=use-a-long-random-secret
 DATABASE_URL=postgresql://user:password@host/database?sslmode=require
 ```
 
-R2/S3 and Resend variables can remain empty until their milestones.
+R2/S3 variables can remain empty during local development. Contact delivery requires `RESEND_API_KEY`, `CONTACT_RECIPIENT_EMAIL`, and `CONTACT_FROM_EMAIL`; without them, the form returns a clear unavailable response.
 
 ## Commands
 
@@ -52,6 +50,17 @@ npm run lint
 npm run build
 ```
 
+## Current migration status
+
+- Managed PostgreSQL is connected and the single administrator has been created.
+- All five categories and the initial article catalogue have been seeded.
+- Payload-backed article pages render rich text, images, syntax-highlighted code, canonical metadata, Open Graph metadata, and `TechArticle` structured data.
+- The native Next.js article library lists and filters published Payload content by category and search term.
+- The native Next.js homepage renders Payload-backed featured and recent articles, live article search, and the public site design.
+- Shared responsive navigation and footer components are used across the homepage, article library, and article detail pages.
+- Services and contact pages are native Next.js routes, with validated server-side Resend delivery for contact inquiries.
+- The former Vite application and browser-local article administration have been removed.
+
 ## Next milestone
 
-Provision a managed PostgreSQL database, add its connection string locally, start the application, create the administrator account, and run the category seed. After that, migrate one article end-to-end and render its stable `/articles/article-slug/` page with canonical metadata and structured data.
+Configure Resend and S3-compatible media storage, complete production-domain metadata, re-enable public indexing, and run the deployment readiness review.

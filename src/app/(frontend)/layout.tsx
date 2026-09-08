@@ -1,10 +1,13 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
+import './base.css'
+import './site.css'
 import './styles.css'
 
 export const metadata: Metadata = {
-  description: 'Technical content platform migration foundation.',
+  description:
+    'Practical ARIS technical guides, solutions and professional support for administration, development, automation and integration.',
   icons: {
     apple: '/apple-touch-icon.png',
     icon: [
@@ -16,7 +19,7 @@ export const metadata: Metadata = {
     follow: false,
     index: false,
   },
-  title: 'Technical Content Platform',
+  title: 'Aris Technical | ARIS Knowledge & Consulting',
 }
 
 type Args = {
