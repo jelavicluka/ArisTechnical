@@ -4,16 +4,19 @@ import { ArticlesLibrary } from '@/components/library/ArticlesLibrary'
 import { SiteFooter } from '@/components/site/SiteFooter'
 import { SiteHeader } from '@/components/site/SiteHeader'
 import { getArticleLibrary } from '@/utilities/getArticleLibrary'
+import { buildPageMetadata } from '@/utilities/siteSettings'
 
 import styles from '@/components/library/library.module.css'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata: Metadata = {
-  description:
-    'Practical ARIS technical articles covering administration, scripting, Process Governance, REST APIs, integrations, installation and setup.',
-  title: 'ARIS Technical Articles & Guides | Aris Technical',
-}
+export const generateMetadata = (): Promise<Metadata> =>
+  buildPageMetadata({
+    description:
+      'Practical technical articles covering ARIS administration, scripting, Process Governance, REST APIs, integrations, installation and setup.',
+    path: '/articles',
+    title: 'Technical Articles & Guides for ARIS',
+  })
 
 export default async function ArticlesPage() {
   const { articles, categories } = await getArticleLibrary()

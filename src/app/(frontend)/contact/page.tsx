@@ -4,14 +4,17 @@ import { ContactForm } from '@/components/contact/ContactForm'
 import { SiteFooter } from '@/components/site/SiteFooter'
 import { SiteHeader } from '@/components/site/SiteHeader'
 import { getArticleLibrary } from '@/utilities/getArticleLibrary'
+import { buildPageMetadata } from '@/utilities/siteSettings'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata: Metadata = {
-  description:
-    'Get in touch about ARIS administration, scripting, Connect Portal customization, Process Governance, integrations, installations or another technical challenge.',
-  title: 'Discuss Your ARIS Project | Aris Technical',
-}
+export const generateMetadata = (): Promise<Metadata> =>
+  buildPageMetadata({
+    description:
+      'Get in touch about ARIS administration, scripting, Connect Portal customization, Process Governance, integrations, installations or another technical challenge.',
+    path: '/contact',
+    title: 'Discuss Your ARIS Project',
+  })
 
 export default async function ContactPage() {
   const { categories } = await getArticleLibrary()

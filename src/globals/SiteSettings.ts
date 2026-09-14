@@ -9,22 +9,50 @@ export const SiteSettings: GlobalConfig = {
     update: authenticated,
   },
   admin: {
-    description: 'Editable identity and SEO defaults so branding and authorship are not hardcoded.',
+    description: 'Site-wide identity, search metadata, social sharing and indexing controls.',
   },
   fields: [
     {
       name: 'siteName',
       type: 'text',
-      admin: {
-        description: 'Can remain empty until the public brand decision is final.',
-      },
+      defaultValue: 'Technical Knowledge & Consulting',
       maxLength: 100,
+      required: true,
+    },
+    {
+      name: 'defaultSEOTitle',
+      type: 'text',
+      admin: {
+        description: 'Homepage title and fallback title used by search engines and social previews.',
+      },
+      defaultValue: 'Independent Technical Guidance for ARIS',
+      maxLength: 70,
+      required: true,
+    },
+    {
+      name: 'defaultSEODescription',
+      type: 'textarea',
+      admin: {
+        description: 'Homepage description and fallback description for pages without their own copy.',
+      },
+      defaultValue:
+        'Independent technical guides and professional support for ARIS administration, development, automation and integration.',
+      maxLength: 170,
+      required: true,
+    },
+    {
+      name: 'defaultSocialImage',
+      type: 'upload',
+      admin: {
+        description: 'Recommended size: 1200 × 630 pixels. The branded fallback is used when empty.',
+      },
+      relationTo: 'media',
     },
     {
       name: 'publisherName',
       type: 'text',
       admin: {
-        description: 'Used for structured data only after the publisher identity is confirmed.',
+        description: 'Organization or business name used in structured data. Defaults to the site name.',
       },
       maxLength: 120,
     },
@@ -37,14 +65,14 @@ export const SiteSettings: GlobalConfig = {
       maxLength: 120,
     },
     {
-      name: 'defaultSEODescription',
-      type: 'textarea',
-      maxLength: 170,
-    },
-    {
-      name: 'defaultSocialImage',
-      type: 'upload',
-      relationTo: 'media',
+      name: 'indexingEnabled',
+      type: 'checkbox',
+      admin: {
+        description:
+          'Allow search engines to index the public site. This only takes effect when a non-local production site URL is configured.',
+        position: 'sidebar',
+      },
+      defaultValue: true,
     },
   ],
 }

@@ -59,25 +59,6 @@
   display: block;
 }
 
-.brand-name {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-  font-size: 15px;
-  line-height: 1;
-  letter-spacing: 0.13em;
-}
-
-.brand-name strong { font-weight: 760; }
-
-.brand-name span {
-  color: var(--muted-light);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-}
-
 .primary-navigation {
   display: flex;
   align-items: center;
@@ -1228,11 +1209,22 @@
 .footer-bottom {
   padding-top: 23px;
   display: flex;
+  align-items: flex-start;
+  gap: 40px;
   justify-content: space-between;
   border-top: 1px solid var(--line);
   color: #504a56;
   font-family: var(--mono);
   font-size: 9px;
+}
+
+.footer-bottom > span { flex: 0 0 auto; }
+
+.trademark-disclaimer {
+  max-width: 760px;
+  margin: 0;
+  line-height: 1.65;
+  text-align: right;
 }
 
 .visually-hidden {
@@ -2426,7 +2418,8 @@
 
   .footer-main { grid-template-columns: 1fr; gap: 48px; }
   .footer-links { grid-template-columns: 0.65fr 1.35fr; gap: 30px; }
-  .footer-bottom { flex-direction: column; gap: 8px; }
+  .footer-bottom { flex-direction: column; gap: 12px; }
+  .trademark-disclaimer { max-width: none; text-align: left; }
 
   .library-hero {
     min-height: auto;
@@ -2538,8 +2531,6 @@
 }
 
 @media (max-width: 380px) {
-  .brand-name span { display: none; }
-
   .dropdown-heading {
     min-height: 54px;
     padding: 8px 7px;

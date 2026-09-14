@@ -16,16 +16,12 @@ export function SiteFooter({ categories }: Props) {
     <footer className="site-footer">
       <div className="content-container footer-main">
         <div className="footer-brand">
-          <a className="brand" href="/" aria-label="Aris Technical home">
+          <a className="brand" href="/" aria-label="Home">
             <span className="brand-mark">
               <BrandMark />
             </span>
-            <span className="brand-name">
-              <strong>ARIS</strong>
-              <span>TECHNICAL</span>
-            </span>
           </a>
-          <p>Practical ARIS technical knowledge and professional consulting.</p>
+          <p>Independent technical guidance and professional consulting for ARIS environments.</p>
         </div>
         <div className="footer-links">
           <div>
@@ -46,8 +42,12 @@ export function SiteFooter({ categories }: Props) {
         </div>
       </div>
       <div className="content-container footer-bottom">
-        <span>© {new Date().getFullYear()} Aris Technical</span>
-        <span>Built around useful technical knowledge.</span>
+        <span>© {new Date().getFullYear()}. All rights reserved.</span>
+        <p className="trademark-disclaimer">
+          ARIS is a trademark or registered trademark of SAG Aris GmbH and/or its affiliates or
+          licensors. This independent website is not affiliated with, endorsed by, or sponsored by
+          SAG Aris GmbH.
+        </p>
       </div>
     </footer>
   )

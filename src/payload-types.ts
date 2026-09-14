@@ -619,27 +619,38 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
- * Editable identity and SEO defaults so branding and authorship are not hardcoded.
+ * Site-wide identity, search metadata, social sharing and indexing controls.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings".
  */
 export interface SiteSetting {
   id: number;
+  siteName: string;
   /**
-   * Can remain empty until the public brand decision is final.
+   * Homepage title and fallback title used by search engines and social previews.
    */
-  siteName?: string | null;
+  defaultSEOTitle: string;
   /**
-   * Used for structured data only after the publisher identity is confirmed.
+   * Homepage description and fallback description for pages without their own copy.
+   */
+  defaultSEODescription: string;
+  /**
+   * Recommended size: 1200 × 630 pixels. The branded fallback is used when empty.
+   */
+  defaultSocialImage?: (number | null) | Media;
+  /**
+   * Organization or business name used in structured data. Defaults to the site name.
    */
   publisherName?: string | null;
   /**
    * Optional fallback for article authorship. No default is currently assumed.
    */
   defaultAuthorName?: string | null;
-  defaultSEODescription?: string | null;
-  defaultSocialImage?: (number | null) | Media;
+  /**
+   * Allow search engines to index the public site. This only takes effect when a non-local production site URL is configured.
+   */
+  indexingEnabled?: boolean | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -649,10 +660,12 @@ export interface SiteSetting {
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
   siteName?: T;
-  publisherName?: T;
-  defaultAuthorName?: T;
+  defaultSEOTitle?: T;
   defaultSEODescription?: T;
   defaultSocialImage?: T;
+  publisherName?: T;
+  defaultAuthorName?: T;
+  indexingEnabled?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

@@ -4,13 +4,19 @@ import { HomeArticleSearch } from '@/components/home/HomeArticleSearch'
 import { SiteFooter } from '@/components/site/SiteFooter'
 import { SiteHeader } from '@/components/site/SiteHeader'
 import { getArticleLibrary } from '@/utilities/getArticleLibrary'
+import { buildPageMetadata, getSiteSettings } from '@/utilities/siteSettings'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata: Metadata = {
-  description:
-    'Practical technical guides, solutions and professional support for ARIS administration, development, automation and integration.',
-  title: 'Aris Technical | ARIS Knowledge & Consulting',
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings()
+
+  return buildPageMetadata({
+    absoluteTitle: true,
+    description: settings.defaultSEODescription,
+    path: '/',
+    title: settings.defaultSEOTitle,
+  })
 }
 
 const topicsByCategory: Record<string, string[]> = {
@@ -127,7 +133,7 @@ export default async function HomePage() {
             <div className="section-heading">
               <div>
                 <p className="section-label">From the technical library</p>
-                <h2>Latest ARIS technical articles</h2>
+                <h2>Latest technical articles for ARIS</h2>
                 <p className="section-description">Practical answers to real administration, development and integration challenges.</p>
               </div>
               <a className="text-link" href="/articles">View all articles <span aria-hidden="true">→</span></a>
@@ -155,7 +161,7 @@ export default async function HomePage() {
           <div className="content-container services-layout">
             <div className="services-intro">
               <p className="section-label">Professional services</p>
-              <h2>Need help with an ARIS technical challenge?</h2>
+              <h2>Need technical help with ARIS?</h2>
               <p>I provide focused technical consulting and development for integrations, automation, scripting, administration and custom ARIS solutions.</p>
               <a className="button button-primary" href="/services">Explore services <span aria-hidden="true">↗</span></a>
             </div>
@@ -186,7 +192,7 @@ export default async function HomePage() {
           <div className="final-cta-glow" aria-hidden="true" />
           <div className="content-container final-cta-content">
             <p className="section-label">Let&apos;s solve it</p>
-            <h2>Have an ARIS technical problem?</h2>
+            <h2>Have a technical problem in ARIS?</h2>
             <p>Tell me what you&apos;re trying to achieve and I&apos;ll let you know whether I can help.</p>
             <div className="hero-actions">
               <a className="button button-primary" href="/contact">Discuss your project <span aria-hidden="true">↗</span></a>

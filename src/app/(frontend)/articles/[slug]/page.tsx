@@ -7,6 +7,7 @@ import { SiteHeader } from '@/components/site/SiteHeader'
 import type { Category, Media } from '@/payload-types'
 import { getArticleBySlug } from '@/utilities/getArticleBySlug'
 import { getArticleLibrary } from '@/utilities/getArticleLibrary'
+import { getAbsoluteURL, getSiteSettings } from '@/utilities/siteSettings'
 
 import styles from '@/components/article/article.module.css'
 
@@ -26,64 +27,100 @@ const formatDate = (date: string) =>
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const article = await getArticleBySlug(slug)
+  const [article, settings] = await Promise.all([getArticleBySlug(slug), getSiteSettings()])
 
   if (!article) return {}
 
-  const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
-  const socialImage = isMedia(article.seo?.socialImage)
+  const uploadedSocialImage = isMedia(article.seo?.socialImage)
     ? article.seo.socialImage
     : isMedia(article.featuredImage)
       ? article.featuredImage
       : null
+  const socialImage = uploadedSocialImage?.url
+    ? {
+        alt: uploadedSocialImage.alt,
+        url: getAbsoluteURL(uploadedSocialImage.url, settings.siteURL),
+      }
+    : settings.socialImage
+  const canonicalURL = article.seo?.canonicalURL ||
+    getAbsoluteURL(`/articles/${article.slug}`, settings.siteURL)
+  const description = article.seo?.description || article.summary
+  const title = article.seo?.title || article.title
+  const authorName = article.authorName || settings.defaultAuthorName
 
   return {
     alternates: {
-      canonical: article.seo?.canonicalURL || `${serverURL}/articles/${article.slug}`,
+      canonical: canonicalURL,
     },
-    description: article.seo?.description || article.summary,
+    description,
     openGraph: {
-      description: article.seo?.description || article.summary,
-      images: socialImage?.url ? [{ alt: socialImage.alt, url: socialImage.url }] : undefined,
-      title: article.seo?.title || article.title,
+      authors: authorName ? [authorName] : undefined,
+      description,
+      images: [socialImage],
+      modifiedTime: article.updatedAt,
+      publishedTime: article.publishedAt || article.createdAt,
+      siteName: settings.siteName,
+      title,
       type: 'article',
+      url: canonicalURL,
     },
     robots: article.seo?.excludeFromIndex ? { follow: false, index: false } : undefined,
-    title: article.seo?.title || article.title,
+    title,
+    twitter: {
+      card: 'summary_large_image',
+      description,
+      images: [socialImage.url],
+      title,
+    },
   }
 }
 
 export default async function ArticlePage({ params }: PageProps) {
   const { slug } = await params
-  const [article, library] = await Promise.all([getArticleBySlug(slug), getArticleLibrary()])
+  const [article, library, settings] = await Promise.all([
+    getArticleBySlug(slug),
+    getArticleLibrary(),
+    getSiteSettings(),
+  ])
 
   if (!article) notFound()
 
   const category = isCategory(article.category) ? article.category : null
   const publicationDate = article.publishedAt || article.createdAt
   const articlesHref = '/articles'
-  const serverURL = (process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000').replace(/\/$/, '')
-  const canonicalURL = article.seo?.canonicalURL || `${serverURL}/articles/${article.slug}`
+  const canonicalURL = article.seo?.canonicalURL ||
+    getAbsoluteURL(`/articles/${article.slug}`, settings.siteURL)
   const socialImage = isMedia(article.seo?.socialImage)
     ? article.seo.socialImage
     : isMedia(article.featuredImage)
       ? article.featuredImage
       : null
+  const authorName = article.authorName || settings.defaultAuthorName
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
-    author: article.authorName
+    articleSection: category?.title,
+    author: authorName
       ? {
           '@type': 'Person',
-          name: article.authorName,
+          name: authorName,
         }
       : undefined,
     dateModified: article.updatedAt,
     datePublished: publicationDate,
     description: article.seo?.description || article.summary,
     headline: article.seo?.title || article.title,
-    image: socialImage?.url || undefined,
+    image: socialImage?.url
+      ? getAbsoluteURL(socialImage.url, settings.siteURL)
+      : settings.socialImage.url,
     mainEntityOfPage: canonicalURL,
+    publisher: settings.publisherName
+      ? {
+          '@type': 'Organization',
+          name: settings.publisherName,
+          url: settings.siteURL,
+        }
+      : undefined,
     url: canonicalURL,
   }
 

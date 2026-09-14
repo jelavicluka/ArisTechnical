@@ -1,14 +1,24 @@
 import type { MetadataRoute } from 'next'
 
-export default function robots(): MetadataRoute.Robots {
-  const siteURL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+import { getSiteSettings } from '@/utilities/siteSettings'
+
+export const dynamic = 'force-dynamic'
+
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const settings = await getSiteSettings()
 
   return {
-    host: siteURL,
-    rules: {
-      allow: '/',
-      disallow: ['/admin/', '/api/', '/preview/'],
-      userAgent: '*',
-    },
+    host: settings.siteURL,
+    rules: settings.indexingEnabled
+      ? {
+          allow: '/',
+          disallow: ['/admin/', '/api/', '/preview/'],
+          userAgent: '*',
+        }
+      : {
+          disallow: '/',
+          userAgent: '*',
+        },
+    sitemap: `${settings.siteURL}/sitemap.xml`,
   }
 }

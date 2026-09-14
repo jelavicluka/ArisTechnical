@@ -76,7 +76,7 @@ export function ArticlesLibrary({ articles, categories }: Props) {
           </nav>
           <p className={styles.eyebrow}>Technical library</p>
           <h1 id="articles-title">
-            ARIS technical articles
+            Technical articles for ARIS
             <br /> <em>built around real problems.</em>
           </h1>
           <p className={styles.intro}>

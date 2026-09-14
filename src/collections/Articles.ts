@@ -128,6 +128,16 @@ export const Articles: CollectionConfig = {
           admin: {
             description: 'Only set when the canonical source is a different URL.',
           },
+          validate: (value: null | string | undefined) => {
+            if (!value) return true
+
+            try {
+              const url = new URL(value)
+              return ['http:', 'https:'].includes(url.protocol) || 'Enter a complete HTTP or HTTPS URL.'
+            } catch {
+              return 'Enter a complete HTTP or HTTPS URL.'
+            }
+          },
         },
         {
           name: 'excludeFromIndex',

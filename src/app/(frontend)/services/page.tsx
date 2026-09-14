@@ -3,14 +3,17 @@ import type { Metadata } from 'next'
 import { SiteFooter } from '@/components/site/SiteFooter'
 import { SiteHeader } from '@/components/site/SiteHeader'
 import { getArticleLibrary } from '@/utilities/getArticleLibrary'
+import { buildPageMetadata } from '@/utilities/siteSettings'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata: Metadata = {
-  description:
-    'Professional ARIS services for scripting, Connect Portal customization, Process Governance, integrations, installations, administration, troubleshooting and code improvement.',
-  title: 'ARIS Technical Services & Development | Aris Technical',
-}
+export const generateMetadata = (): Promise<Metadata> =>
+  buildPageMetadata({
+    description:
+      'Professional ARIS services for scripting, Connect Portal customization, Process Governance, integrations, installations, administration, troubleshooting and code improvement.',
+    path: '/services',
+    title: 'Technical Services & Development for ARIS',
+  })
 
 const serviceAreas = [
   {
@@ -70,7 +73,7 @@ export default async function ServicesPage() {
               <nav className="breadcrumbs" aria-label="Breadcrumb">
                 <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Services</span>
               </nav>
-              <p className="section-label">ARIS technical services</p>
+              <p className="section-label">Technical services for ARIS</p>
               <h1 id="services-title">Build what ARIS needs.<br /> <em>Fix what holds it back.</em></h1>
               <p>
                 Technical development, improvements and project delivery—together with practical help
@@ -82,7 +85,7 @@ export default async function ServicesPage() {
               </div>
             </div>
 
-            <div className="service-scope-panel" aria-label="Available ARIS technical support">
+            <div className="service-scope-panel" aria-label="Available technical support for ARIS">
               <div className="scope-panel-bar">
                 <span><i /><i /><i /></span><small>technical_scope.json</small><b><i /> Available</b>
               </div>
@@ -92,7 +95,7 @@ export default async function ServicesPage() {
                 <p><span>03</span><strong>Diagnose</strong><small>Bugs and complex problems</small></p>
                 <p><span>04</span><strong>Improve</strong><small>Reviews and refactoring</small></p>
               </div>
-              <div className="scope-panel-footer"><span>ARIS technical delivery</span><strong>6 service areas</strong></div>
+              <div className="scope-panel-footer"><span>Technical delivery for ARIS</span><strong>6 service areas</strong></div>
             </div>
           </div>
         </section>
@@ -148,7 +151,7 @@ export default async function ServicesPage() {
           <div className="final-cta-glow" aria-hidden="true" />
           <div className="content-container service-final-cta-content">
             <p className="section-label">Start with the problem</p>
-            <h2>Have an ARIS technical challenge?</h2>
+            <h2>Have a technical challenge in ARIS?</h2>
             <p>Tell me what you are trying to build, improve or fix and I&apos;ll let you know whether I can help.</p>
             <div className="hero-actions">
               <a className="button button-primary" href="/contact">Discuss your project <span aria-hidden="true">↗</span></a>

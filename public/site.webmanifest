@@ -1,7 +1,7 @@
 {
-  "name": "Aris Technical",
-  "short_name": "Aris Technical",
-  "description": "Practical ARIS technical guides, solutions and professional consulting.",
+  "name": "Technical Knowledge & Consulting",
+  "short_name": "Technical Knowledge",
+  "description": "Independent technical guides, solutions and professional consulting for ARIS environments.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#09080d",

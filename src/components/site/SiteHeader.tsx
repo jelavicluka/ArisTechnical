@@ -40,13 +40,9 @@ export function SiteHeader({ categories, currentPage = 'home' }: Props) {
   return (
     <header className="site-header">
       <div className="header-inner">
-        <a className="brand" href="/" aria-label="Aris Technical home" onClick={closeNavigation}>
+        <a className="brand" href="/" aria-label="Home" onClick={closeNavigation}>
           <span className="brand-mark">
             <BrandMark />
-          </span>
-          <span className="brand-name">
-            <strong>ARIS</strong>
-            <span>TECHNICAL</span>
           </span>
         </a>
 
