@@ -1,6 +1,6 @@
 .articlePage {
-  --article-bg: #09080d;
-  --article-panel: #0e0d13;
+  --article-bg: var(--background);
+  --article-panel: var(--surface-panel);
   --article-line: rgba(255, 255, 255, 0.09);
   --article-line-strong: rgba(255, 255, 255, 0.14);
   --article-text: #f4f1f8;
@@ -110,7 +110,7 @@
   color: #c9a7f7;
   background: rgba(167, 108, 255, 0.07);
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -141,9 +141,9 @@
   align-items: center;
   justify-content: center;
   gap: 13px;
-  color: #746e7b;
+  color: var(--muted-light);
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.025em;
 }
 
@@ -245,7 +245,7 @@
   overflow: hidden;
   border: 1px solid #292430;
   border-radius: 11px;
-  background: #0a090e;
+  background: var(--surface-input);
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.38);
 }
 
@@ -256,7 +256,7 @@
   grid-template-columns: minmax(76px, 1fr) auto minmax(76px, 1fr);
   align-items: center;
   border-bottom: 1px solid #242029;
-  background: #100e14;
+  background: var(--surface-panel);
 }
 
 .windowDots { display: flex; gap: 6px; }
@@ -282,7 +282,7 @@
 .codeIdentity > span {
   overflow: hidden;
   color: #a7a0ad;
-  font-size: 11px;
+  font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -291,8 +291,8 @@
   padding: 4px 6px;
   border: 1px solid #302a38;
   border-radius: 4px;
-  color: #706878;
-  font-size: 8px;
+  color: var(--muted-light);
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -307,7 +307,7 @@
   border: 1px solid #302b37;
   border-radius: 6px;
   color: #a69fab;
-  background: #151219;
+  background: var(--surface-panel);
   font: 600 10px ui-monospace, SFMono-Regular, Consolas, monospace;
   cursor: pointer;
   transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
@@ -364,7 +364,7 @@
   padding: 0 17px 0 21px;
   display: table-cell;
   border-right: 1px solid rgba(255, 255, 255, 0.045);
-  color: #4e4755;
+  color: var(--muted-light);
   text-align: right;
   user-select: none;
 }
@@ -376,7 +376,7 @@
   left: 0;
   height: 105px;
   pointer-events: none;
-  background: linear-gradient(transparent, #0a090e 88%);
+  background: linear-gradient(transparent, var(--surface-input) 88%);
 }
 
 .codeFooter {
@@ -386,10 +386,10 @@
   align-items: center;
   justify-content: space-between;
   border-top: 1px solid #242029;
-  color: #5e5765;
-  background: #0e0c11;
+  color: var(--muted-light);
+  background: var(--surface-section);
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 9px;
+  font-size: 12px;
 }
 
 .codeFooter button {
@@ -422,7 +422,7 @@
 .codeFigure figcaption,
 .articleImage figcaption {
   margin-top: 13px;
-  color: #77707f;
+  color: var(--muted-light);
   font-size: 12px;
   line-height: 1.6;
   text-align: center;
@@ -470,13 +470,13 @@
 .articleFooter span {
   color: #7e5ba8;
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.articleFooter p { margin: 8px 0 0; color: #8d8694; font-size: 14px; }
+.articleFooter p { margin: 8px 0 0; color: var(--muted-light); font-size: 14px; }
 
 .articleFooter a {
   min-height: 42px;
@@ -496,13 +496,13 @@
 
 @media (max-width: 700px) {
   .siteHeader { width: calc(100% - 32px); height: 66px; }
-  .brandLink span { font-size: 11px; }
-  .backLink { min-height: 36px; padding: 0 10px 0 8px; font-size: 11px; }
+  .brandLink span { font-size: 12px; }
+  .backLink { min-height: 36px; padding: 0 10px 0 8px; font-size: 12px; }
 
   .heroInner { width: calc(100% - 32px); padding: 64px 0 62px; }
   .articleHero h1 { font-size: clamp(38px, 12vw, 52px); }
   .summary { margin-top: 23px; font-size: 16px; }
-  .articleMeta { margin-top: 29px; flex-wrap: wrap; font-size: 10px; }
+  .articleMeta { margin-top: 29px; flex-wrap: wrap; font-size: 12px; }
 
   .articleContent { width: calc(100% - 36px); padding: 62px 0 72px; }
   .richText p { font-size: 17px; line-height: 1.82; }
@@ -521,7 +521,7 @@
   .codeIdentity small { display: none; }
   .copyButton { padding: 0 8px; }
   .copyButton span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-  .codeViewport pre { font-size: 11px; }
+  .codeViewport pre { font-size: 12px; }
   .codeText { padding-right: 18px; padding-left: 15px; }
   .lineNumber { padding-right: 12px; padding-left: 13px; }
   .codeCollapsed { max-height: 390px; }

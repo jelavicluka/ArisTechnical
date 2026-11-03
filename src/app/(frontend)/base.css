@@ -1,5 +1,11 @@
 :root {
-  --background: #09080d;
+  --background: #17151e;
+  --background-rgb: 23, 21, 30;
+  --surface-section: #1c1924;
+  --surface-panel: #211d29;
+  --surface-panel-rgb: 33, 29, 41;
+  --surface-input: #14121b;
+  --surface-footer: #121018;
   --ink: #09080d;
   --white: #f4f1f8;
   --muted-light: #a39dab;
