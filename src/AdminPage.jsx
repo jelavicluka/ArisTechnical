@@ -79,6 +79,7 @@ function CodeBlockEditor({ block, onChange }) {
           Language
           <select value={block.language} onChange={(event) => onChange({ ...block, language: event.target.value })}>
             <option value="javascript">JavaScript</option>
+            <option value="css">CSS</option>
             <option value="json">JSON</option>
             <option value="xml">XML</option>
             <option value="bash">Command line</option>

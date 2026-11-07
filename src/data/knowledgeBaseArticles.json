@@ -1,0 +1,118 @@
+[
+  {
+    "id": "export-selected-model-names-to-excel",
+    "title": "Export Selected Model Names to Excel with an ARIS Report",
+    "description": "Create a simple Excel list of the models you select in ARIS, using a short report script.",
+    "slug": "export-selected-model-names-to-excel",
+    "category": "scripting",
+    "date": "2026-11-07",
+    "readTime": "2 min read",
+    "status": "published",
+    "content": [
+      {
+        "id": "model-names-intro",
+        "type": "richText",
+        "html": "<p>Need a quick list of model names for a review or a handover? This report writes one selected model per row in an Excel workbook.</p><h2>Run it on selected models</h2><p>Create a report in code view with <strong>Model</strong> context and Excel output. Paste the script below, then select one or more models and run the report. These APIs run inside ARIS report scripting.</p>"
+      },
+      {
+        "id": "model-names-code",
+        "type": "code",
+        "language": "javascript",
+        "filename": "export-model-names.js",
+        "code": "var language = Context.getSelectedLanguage();\nvar models = ArisData.getSelectedModels();\nvar workbook = Context.createExcelWorkbook(Context.getSelectedFile());\nvar sheet = workbook.createSheet(\"Models\");\nsheet.createRow(0).createCell(0).setCellValue(\"Model name\");\n\nfor (var i = 0; i < models.length; i++) {\n    var row = sheet.createRow(i + 1);\n    row.createCell(0).setCellValue(models[i].Name(language));\n}\n\nworkbook.write();"
+      },
+      {
+        "id": "model-names-result",
+        "type": "richText",
+        "html": "<h2>What you get</h2><p>The <strong>Models</strong> worksheet contains a <strong>Model name</strong> heading followed by the selected models, using the report's selected language. Selecting two models produces two data rows. With no selected models, only the heading is written.</p><p><code>getSelectedModels()</code> supplies the selection, <code>createRow()</code> adds each row, and <code>write()</code> saves the workbook. The script reads model names without changing repository content.</p><p>API reference: <a href=\"https://docs.aris.com/10.0.27.0/yaa-script-help-ba/en/content/en-us/r_O_Context_createexcelworkbook.html\">ARIS 10.0.27 Excel workbook API</a>.</p>"
+      }
+    ]
+  },
+  {
+    "id": "count-function-occurrences-in-models",
+    "title": "Count Function Occurrences in Selected ARIS Models",
+    "description": "Export a small Excel summary showing how many function occurrences each selected model contains.",
+    "slug": "count-function-occurrences-in-models",
+    "category": "scripting",
+    "date": "2026-11-07",
+    "readTime": "2 min read",
+    "status": "published",
+    "content": [
+      {
+        "id": "function-count-intro",
+        "type": "richText",
+        "html": "<p>A small count can help you compare models before a review. This report creates an Excel sheet with the model name and the number of function occurrences drawn in that model.</p><h2>The report</h2><p>Create a report in code view with <strong>Model</strong> context and Excel output. Select the models you want to compare and run this script inside ARIS.</p>"
+      },
+      {
+        "id": "function-count-code",
+        "type": "code",
+        "language": "javascript",
+        "filename": "count-function-occurrences.js",
+        "code": "var language = Context.getSelectedLanguage();\nvar models = ArisData.getSelectedModels();\nvar workbook = Context.createExcelWorkbook(Context.getSelectedFile());\nvar sheet = workbook.createSheet(\"Function counts\");\nvar header = sheet.createRow(0);\nheader.createCell(0).setCellValue(\"Model name\");\nheader.createCell(1).setCellValue(\"Function occurrences\");\n\nfor (var i = 0; i < models.length; i++) {\n    var count = models[i].ObjOccListFilter(Constants.OT_FUNC).length;\n    var row = sheet.createRow(i + 1);\n    row.createCell(0).setCellValue(models[i].Name(language));\n    row.createCell(1).setCellValue(count);\n}\n\nworkbook.write();"
+      },
+      {
+        "id": "function-count-result",
+        "type": "richText",
+        "html": "<h2>Read the result</h2><p>If a selected model contains five function occurrences, its row shows <strong>5</strong>. A model with none shows <strong>0</strong>.</p><p><code>ObjOccListFilter(Constants.OT_FUNC)</code> returns occurrences whose object type is Function. If the same function definition appears twice in a model, both appearances are counted. Function occurrences drawn with other symbols, including process interfaces of that object type, are included too. This is an occurrence count, not a count of unique function definitions or a filtered activity count.</p><p>API reference: <a href=\"https://docs.aris.com/10.0.27.0/yaa-script-help-ba/en/content/en-us/r_O_Model_objocclistfilter2.html\">ARIS 10.0.27 Model.ObjOccListFilter(int)</a>.</p>"
+      }
+    ]
+  },
+  {
+    "id": "hide-database-switcher-in-aris-connect",
+    "title": "Hide the Database Switcher in ARIS Connect",
+    "description": "Simplify a classic ARIS Connect header with a three-line CSS rule that hides the database selector.",
+    "slug": "hide-database-switcher-in-aris-connect",
+    "category": "connect-customization",
+    "date": "2026-11-07",
+    "readTime": "1 min read",
+    "status": "published",
+    "content": [
+      {
+        "id": "database-switcher-intro",
+        "type": "richText",
+        "html": "<p>When a portal is intended for a single database, the database selector can take up unnecessary space in the header. In classic ARIS Connect configurations that use the selectors below, a small CSS override hides it.</p><h2>Add this CSS</h2><p>Append the rule to a stylesheet already loaded by your active custom Connect configuration, typically under <code>resources/css/</code>. Creating a new CSS file alone will not load it; use your existing custom stylesheet for this example.</p>"
+      },
+      {
+        "id": "database-switcher-code",
+        "type": "code",
+        "language": "css",
+        "filename": "custom.css (append to your loaded stylesheet)",
+        "code": ".cpn-header-section .comboDBSwitcher {\n    display: none;\n}"
+      },
+      {
+        "id": "database-switcher-result",
+        "type": "richText",
+        "html": "<h2>Check the result</h2><p>Apply the updated configuration using your environment's normal deployment process and reload Connect. The database selector should disappear while the other header controls remain visible. Remove the rule to show it again.</p><p>This is a visual change only: it does not select a database or change database access permissions. The rule applies to classic Connect layouts that expose these CSS selectors. If it has no effect in your version or theme, inspect the selector in the browser and confirm that your stylesheet is loaded.</p>"
+      }
+    ]
+  },
+  {
+    "id": "change-active-navigation-color-in-aris-connect",
+    "title": "Change the Active Navigation Color in ARIS Connect",
+    "description": "Use a small CSS override to give selected navigation items a consistent accent color in classic ARIS Connect.",
+    "slug": "change-active-navigation-color-in-aris-connect",
+    "category": "connect-customization",
+    "date": "2026-11-07",
+    "readTime": "1 min read",
+    "status": "published",
+    "content": [
+      {
+        "id": "navigation-accent-intro",
+        "type": "richText",
+        "html": "<p>A consistent selection color makes it easier to see where you are in a portal. This example changes the border accent of selected navigation items to purple.</p><h2>Add the override</h2><p>Append this rule to the custom stylesheet already loaded by your active Connect configuration, typically under <code>resources/css/</code>. The selectors cover the navigation list and the regular or collapsible navigation bar used in this classic Connect layout.</p>"
+      },
+      {
+        "id": "navigation-accent-code",
+        "type": "code",
+        "language": "css",
+        "filename": "custom.css (append to your loaded stylesheet)",
+        "code": ".navigationList .navigationItem-selected,\n.navigationBar.collapsible > .list-item.navigationItem-selected .dropdown-toggle,\n.navigationBar .navigationItem.navigationItem-selected > a {\n    border-color: #7c3aed !important;\n}"
+      },
+      {
+        "id": "navigation-accent-result",
+        "type": "richText",
+        "html": "<h2>Make it your own</h2><p>Replace <code>#7c3aed</code> with your accent color, apply the updated configuration through your normal deployment process and reload Connect. Navigate between sections and check that the selected item's existing border uses the new color. This rule changes border color; it does not create a border where the theme has none.</p><p><code>!important</code> lets this small override take priority over competing normal theme rules. These selectors are specific to the classic Connect layout used in the source example, so check them when using a different theme or ARIS version.</p>"
+      }
+    ]
+  }
+]

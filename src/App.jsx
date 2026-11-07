@@ -1,7 +1,18 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import AdminPage from './AdminPage.jsx'
+import ArticleContent from './ArticleContent.jsx'
 import { formatArticleDate, loadArticles } from './articleStore.js'
+
+const FEATURED_ARTICLE_ID = 'run-aris-reports-from-external-applications'
+
+function isFeaturedArticle(article) {
+  return article.id === FEATURED_ARTICLE_ID
+}
+
+function FeaturedBadge() {
+  return <span className="featured-badge"><span aria-hidden="true">★</span> Featured guide</span>
+}
 
 const articleCategories = [
   ['ARIS Administration', 'Configuration, access & troubleshooting'],
@@ -9,6 +20,7 @@ const articleCategories = [
   ['APG & Automation', 'Workflows & process automation'],
   ['REST API & Integrations', 'APIs, data & connected systems'],
   ['Installation & Setup', 'Infrastructure & environments'],
+  ['ARIS Connect Customization', 'Portal styling & practical UI changes'],
 ]
 
 const expertiseAreas = [
@@ -41,37 +53,6 @@ const expertiseAreas = [
     title: 'Installation & Setup',
     description: 'Infrastructure planning, installation, configuration and technical setup of ARIS environments.',
     topics: ['Installation', 'Configuration', 'Upgrades', 'Environment setup'],
-  },
-]
-
-const latestArticles = [
-  {
-    category: 'REST API & Integrations',
-    title: 'How to Retrieve ARIS Models Using the REST API',
-    description: 'A practical walkthrough of authentication, repository access and model data retrieval.',
-    date: '18 Aug 2026',
-    readTime: '9 min read',
-  },
-  {
-    category: 'ARIS Administration',
-    title: 'Configure LDAP User Synchronization in ARIS',
-    description: 'Understand the core settings, mappings and checks needed for reliable LDAP synchronization.',
-    date: '12 Aug 2026',
-    readTime: '11 min read',
-  },
-  {
-    category: 'ARIS Scripting',
-    title: 'Export ARIS Model Data to Excel with a Report Script',
-    description: 'Build a reusable report script that turns model and object data into a structured export.',
-    date: '04 Aug 2026',
-    readTime: '13 min read',
-  },
-  {
-    category: 'APG & Automation',
-    title: 'Building an Approval Workflow with ARIS Process Governance',
-    description: 'A technical introduction to workflow structure, roles, triggers and error handling in APG.',
-    date: '27 Jul 2026',
-    readTime: '10 min read',
   },
 ]
 
@@ -176,6 +157,14 @@ const categoryPages = [
     shortTitle: 'Installation & Setup',
     description: 'Installation, infrastructure, configuration and technical setup guidance for ARIS environments.',
     topics: ['Installation', 'Infrastructure', 'Configuration', 'Upgrades'],
+  },
+  {
+    slug: 'connect-customization',
+    number: '06',
+    title: 'ARIS Connect Customization',
+    shortTitle: 'Connect Customization',
+    description: 'Simple examples for tailoring the ARIS Connect portal, navigation and appearance.',
+    topics: ['Connect', 'Customization', 'CSS', 'Navigation', 'Portal styling'],
   },
 ]
 
@@ -375,6 +364,13 @@ function Footer() {
 }
 
 function HomePage() {
+  const [articles] = useState(loadArticles)
+  const latestArticles = articles.filter((article) => article.status === 'published')
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, 4)
+  const featuredArticle = articles.find((article) => article.status === 'published' && isFeaturedArticle(article))
+  const featuredImage = featuredArticle?.content.find((block) => block.type === 'image' && block.src)
+
   return (
     <div className="site-shell" id="top">
       <a className="skip-link" href="#main-content">Skip to content</a>
@@ -405,6 +401,26 @@ function HomePage() {
           </div>
         </section>
 
+        {featuredArticle && (
+          <section className="content-section featured-section" aria-labelledby="featured-title">
+            <div className="content-container">
+              <article className="featured-article">
+                <div className="featured-code featured-diagram">
+                  {featuredImage ? <img src={featuredImage.src} alt={featuredImage.alt} /> : <span className="section-label">ARIS technical guide</span>}
+                </div>
+                <div className="featured-copy">
+                  <FeaturedBadge />
+                  <p className="article-category">{categoryPages.find((category) => category.slug === featuredArticle.category)?.shortTitle}</p>
+                  <h2 id="featured-title">{featuredArticle.title}</h2>
+                  <p>{featuredArticle.description}</p>
+                  <div className="article-meta"><span>{featuredArticle.readTime}</span><span>{formatArticleDate(featuredArticle.date)}</span></div>
+                  <a className="button button-primary" href={articleUrl(featuredArticle)}>Read the complete guide <span aria-hidden="true">→</span></a>
+                </div>
+              </article>
+            </div>
+          </section>
+        )}
+
         <section className="content-section expertise-section" id="expertise">
           <div className="content-container">
             <SectionHeading
@@ -428,26 +444,6 @@ function HomePage() {
           </div>
         </section>
 
-        <section className="content-section featured-section" aria-labelledby="featured-title">
-          <div className="content-container">
-            <article className="featured-article">
-              <div className="featured-code" aria-hidden="true">
-                <div className="code-window-bar"><i /><i /><i /><span>authentication.js</span></div>
-                <pre><code><span className="code-violet">const</span> response = <span className="code-violet">await</span> fetch(<br />  <span className="code-green">'/aris/api/repository'</span>,<br />  {'{'}<br />    method: <span className="code-green">'GET'</span>,<br />    headers: {'{'}<br />      Authorization: <span className="code-blue">`Bearer ${'{'}token{'}'}`</span><br />    {'}'}<br />  {'}'}<br />)</code></pre>
-                <span className="status-line"><i /> 200 OK · application/json</span>
-              </div>
-              <div className="featured-copy">
-                <p className="section-label">Featured technical guide</p>
-                <p className="article-category">REST API & Integrations</p>
-                <h2 id="featured-title">ARIS Repository API Authentication: Guide and Examples</h2>
-                <p>Learn how authentication works, structure requests correctly and diagnose the most common authorization failures.</p>
-                <div className="article-meta"><span>14 min read</span><span>Updated 18 Aug 2026</span></div>
-                <a className="button button-primary" href="#featured-article">Read the complete guide <span aria-hidden="true">→</span></a>
-              </div>
-            </article>
-          </div>
-        </section>
-
         <section className="content-section articles-section" id="articles">
           <div className="content-container">
             <SectionHeading
@@ -461,13 +457,13 @@ function HomePage() {
                 <article className="article-card" key={article.title}>
                   <div className="article-card-top">
                     <span className="article-index">0{index + 1}</span>
-                    <span className="article-category">{article.category}</span>
+                    <span className="article-category">{categoryPages.find((category) => category.slug === article.category)?.shortTitle}</span>
                   </div>
-                  <h3><a href="/articles/">{article.title}</a></h3>
+                  <h3><a href={articleUrl(article)}>{article.title}</a></h3>
                   <p>{article.description}</p>
                   <div className="article-card-footer">
-                    <span>{article.date} · {article.readTime}</span>
-                    <a href="/articles/" aria-label={`Read ${article.title}`}><ArrowIcon /></a>
+                    <span>{formatArticleDate(article.date)} · {article.readTime}</span>
+                    <a href={articleUrl(article)} aria-label={`Read ${article.title}`}><ArrowIcon /></a>
                   </div>
                 </article>
               ))}
@@ -523,22 +519,65 @@ function HomePage() {
   )
 }
 
-function LibraryArticle({ article }) {
-  const category = categoryPages.find((item) => item.slug === article.category)
+function articleUrl(article) {
+  return `/articles/${article.category}/${article.slug}/`
+}
+
+function ArticlePage({ categorySlug, slug }) {
+  const [articles] = useState(loadArticles)
+  const article = articles.find((item) => item.category === categorySlug && item.slug === slug && item.status === 'published')
+  const category = categoryPages.find((item) => item.slug === categorySlug)
+
+  useEffect(() => {
+    document.title = article ? `${article.title} | Aris Technical` : 'Article not found | Aris Technical'
+    document.querySelector('meta[name="description"]')?.setAttribute('content', article?.description || 'Browse the ARIS technical library.')
+  }, [article])
 
   return (
-    <article className="library-article">
+    <div className="site-shell article-page" id="top">
+      <a className="skip-link" href="#main-content">Skip to content</a>
+      <Header currentPage="articles" />
+      <main className="article-detail" id="main-content">
+        <nav className="breadcrumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><a href="/articles/">Articles</a>
+          {category && <><span aria-hidden="true">/</span><a href={`/articles/#${category.slug}`}>{category.shortTitle}</a></>}
+        </nav>
+        {article ? (
+          <article>
+            <header className="article-detail-header">
+              <p className="article-category">{category?.shortTitle || article.category}</p>
+              <h1>{article.title}</h1>
+              <p className="article-detail-summary">{article.description}</p>
+              <div className="article-meta"><span>{formatArticleDate(article.date)}</span><span>{article.readTime}</span></div>
+            </header>
+            <ArticleContent article={article} />
+          </article>
+        ) : <div className="article-detail-header"><h1>Article not found</h1><p>This article is no longer available. Browse the library for our latest guides.</p></div>}
+        <a className="article-detail-back" href="/articles/">← Back to all articles</a>
+      </main>
+      <Footer />
+    </div>
+  )
+}
+
+function LibraryArticle({ article }) {
+  const category = categoryPages.find((item) => item.slug === article.category)
+  const featured = isFeaturedArticle(article)
+
+  return (
+    <article className={`library-article${featured ? ' is-featured' : ''}`}>
       <div className="library-article-copy">
+        {featured && <FeaturedBadge />}
         <p className="article-category">{category.shortTitle}</p>
         <h3>
-          <a href={`/articles/#${category.slug}`}>{article.title}</a>
+          <a href={articleUrl(article)}>{article.title}</a>
         </h3>
         <p>{article.description}</p>
       </div>
       <div className="library-article-meta">
         <span>{formatArticleDate(article.date)}</span>
         <span>{article.readTime}</span>
-        <a href={`/articles/#${category.slug}`} aria-label={`Read ${article.title}`}><ArrowIcon /></a>
+        <a href={articleUrl(article)} aria-label={`Read ${article.title}`}><ArrowIcon /></a>
       </div>
     </article>
   )
@@ -553,6 +592,8 @@ function ArticlesPage() {
   })
   const normalizedQuery = searchQuery.trim().toLowerCase()
   const publishedArticles = articles.filter((article) => article.status === 'published')
+    .sort((a, b) => Number(isFeaturedArticle(b)) - Number(isFeaturedArticle(a))
+      || b.date.localeCompare(a.date))
   const filteredArticles = publishedArticles.filter((article) => {
     if (selectedCategory !== 'all' && article.category !== selectedCategory) return false
     if (normalizedQuery) {
@@ -586,7 +627,7 @@ function ArticlesPage() {
     document.title = 'ARIS Technical Articles & Guides | Aris Technical'
     description?.setAttribute(
       'content',
-      'Practical ARIS technical articles covering administration, scripting, Process Governance, REST APIs, integrations, installation and setup.',
+      'Practical ARIS technical articles covering reports, Connect customization, administration, scripting, Process Governance, REST APIs, integrations, installation and setup.',
     )
 
     return () => {
@@ -651,7 +692,7 @@ function ArticlesPage() {
                 <p className="section-label">{normalizedQuery ? 'Search results' : 'Technical articles'}</p>
                 <h2>{activeCategory ? activeCategory.shortTitle : 'All articles'}</h2>
               </div>
-              <p>{filteredArticles.length} {filteredArticles.length === 1 ? 'article' : 'articles'} · Newest first</p>
+              <p>{filteredArticles.length} {filteredArticles.length === 1 ? 'article' : 'articles'} · {filteredArticles.some(isFeaturedArticle) ? 'Featured first' : 'Newest first'}</p>
             </div>
 
             <div className="article-filter-bar" aria-label="Filter articles by technical area">
@@ -1030,6 +1071,8 @@ function ContactPage() {
 function App() {
   const path = window.location.pathname
   if (path === '/admin' || path.startsWith('/admin/')) return <AdminPage />
+  const articlePath = path.match(/^\/articles\/([^/]+)\/([^/]+)\/?$/)
+  if (articlePath) return <ArticlePage categorySlug={articlePath[1]} slug={articlePath[2]} />
   if (path === '/articles' || path.startsWith('/articles/')) return <ArticlesPage />
   if (path === '/services' || path.startsWith('/services/')) return <ServicesPage />
   if (path === '/contact' || path.startsWith('/contact/')) return <ContactPage />

@@ -1,0 +1,84 @@
+[
+  {
+    "title": "Run ARIS Reports from External Applications and Get the Results Back",
+    "description": "Go beyond standard ARIS REST API operations: trigger custom or existing reports externally, pass parameters and retrieve structured results or document links.",
+    "slug": "run-aris-reports-from-external-applications",
+    "category": "rest-api-integrations",
+    "readTime": "3 min read",
+    "status": "published",
+    "id": "run-aris-reports-from-external-applications",
+    "date": "2026-11-05",
+    "content": [
+      {
+        "id": "external-report-intro",
+        "type": "richText",
+        "html": "<p>What if your business application could request an ARIS report and use the result automatically?</p>\n<p>At ArisTechnical, we built a proof of concept that demonstrates exactly that: an external application starts an ARIS report, supplies input parameters and retrieves the result after execution. No manual interaction with the ARIS interface is required for each run.</p>"
+      },
+      {
+        "id": "external-report-flow",
+        "type": "image",
+        "src": "/articles/run-aris-reports-from-external-applications/report-flow.svg",
+        "alt": "An external application sends parameters to an ARIS report and receives structured results. An optional document workflow stores a generated file in ADS and returns its download URL.",
+        "caption": "Parameters in. Results back. Document delivery can be added through ADS."
+      },
+      {
+        "id": "external-report-body",
+        "type": "richText",
+        "html": "<h2>Unlock more of ARIS through report scripting</h2>\n<p>The standard ARIS REST API exposes a defined set of operations and does not cover everything available through report scripting. ARIS itself documents this distinction in its <a href=\"https://docs.aris.com/10.0.27.0/yay-repository-api-guide/en/Repository-API---Technical-Introduction.pdf\">Repository API guide</a>.</p>\n<p><a href=\"https://docs.aris.com/latest/yay-view-consume/en-us/6603-use-reports.html\">A custom report</a> can use the ARIS Script API to extract and combine repository information, analyse relationships, apply business rules and update repository content. Calling that report externally brings these capabilities into an API-driven workflow.</p>\n<p><strong>This significantly expands what an ARIS REST integration can do:</strong> the report defines the operation and the result your application needs. The available Script API functionality, permissions and licences still determine its scope.</p>\n<h2>From an external request to a verified result</h2>\n<p>Using a Node.js client and ARIS HTTP APIs, we authenticated independently, triggered a prepared report and followed its execution through to completion. The report processed the supplied input and returned structured JSON that the client could read and verify.</p>\n<ul><li>Pass parameters that control what the report processes.</li><li>Run report logic inside ARIS from an external application.</li><li>Retrieve calculated values and structured data for further processing.</li><li>Check completion and handle report errors in the calling application.</li></ul>\n<h2>Results can also be documents</h2>\n<p>For document workflows, the integration can be extended so the report generates a file, saves it to ADS (ARIS Document Storage) and returns the ADS document download URL as part of its result. The calling application can then use that URL to retrieve the document with the required access permissions.</p>\n<p>The file can be in any format that the particular ARIS report can generate. This makes it possible to combine structured response data with a downloadable business deliverable.</p>\n<h2>What could this enable for your team?</h2>\n<p>Imagine an internal portal requesting a process assessment with selected criteria. ARIS runs the report, and the portal receives the findings or a link to the generated document. The same approach could support scheduled exports, automated quality checks and integration with enterprise workflows.</p>\n<p>ArisTechnical develops custom ARIS reports for specific integration needs. We can also assess and adapt suitable reports already in your environment, preserving existing business logic while preparing their inputs, outputs and execution for automation. This makes your existing report library a valuable starting point.</p>\n<p>Our PoC validated parameter exchange and structured results on ARIS 10.2025.10.0. The execution interfaces are version-specific, so each implementation needs to fit the target ARIS environment, report design and access rights.</p>\n<h2>Have an ARIS workflow you want to automate?</h2>\n<p>Tell us which system should trigger the report, what it should send and what it needs back. ArisTechnical can assess the integration, build a custom report or adapt an existing one, and connect it to your workflow.</p>\n<p class=\"cta-line\"><a href=\"/contact/\"><strong>Discuss your ARIS integration with us.</strong></a></p>"
+      }
+    ]
+  },
+  {
+    "id": "call-rest-api-from-aris-report",
+    "title": "Call a REST API from an ARIS Report",
+    "description": "A practical guide to calling REST APIs from ARIS reports with NetUtils: send GET and POST requests, handle JSON and configure timeouts.",
+    "slug": "call-rest-api-from-aris-report",
+    "category": "rest-api-integrations",
+    "date": "2026-11-05",
+    "readTime": "5 min read",
+    "status": "published",
+    "content": [
+      {
+        "id": "rest-report-block-1",
+        "type": "richText",
+        "html": "<p>An ARIS report can fetch data from another system or send information to it over HTTP. This lets you enrich report output with external data, check repository content against another source or pass calculated results into a business workflow.</p><p>The ARIS Script API provides a built-in HTTP helper: <code>Utilities.getNetUtils().doRestCall(...)</code>. Here is a small example you can adapt.</p><h2>1. Fetch JSON with a GET request</h2><p>Create a report in code view with Database context. The example uses no selected models and generates no output file. It calls <a href=\"https://jsonplaceholder.typicode.com/\">JSONPlaceholder</a>, a public test API that requires no credentials. The ARIS report execution server must be able to reach it.</p>"
+      },
+      {
+        "id": "rest-report-block-2",
+        "type": "code",
+        "language": "javascript",
+        "filename": "get-api-example.js",
+        "code": "// Run inside an ARIS report, not in a browser or Node.js.\nvar netUtils = Utilities.getNetUtils();\nvar headers = new java.util.HashMap();\nheaders.put(\"Accept\", \"application/json\");\n\nvar responseText = netUtils.doRestCall(\n    \"https://jsonplaceholder.typicode.com/posts/1\",\n    \"GET\",\n    \"json\",\n    headers,\n    null,   // No request body for this GET.\n    10000,  // Connection timeout: 10 seconds.\n    30000   // Read timeout: 30 seconds.\n);\n\nvar post = JSON.parse(String(responseText));\nif (!post || typeof post.id !== \"number\"\n        || typeof post.title !== \"string\") {\n    throw new Error(\"Unexpected API response: id and title required.\");\n}\n\nvar result = { id: post.id, title: post.title };"
+      },
+      {
+        "id": "rest-report-block-3",
+        "type": "richText",
+        "html": "<h2>What the code does</h2><p><code>java.util.HashMap</code> supplies the request headers. The <code>\"json\"</code> argument selects the response format for the Accept header; it does not parse the response.</p><p><code>doRestCall</code> returns the response body as a string. <code>String(...)</code> converts it to a JavaScript string, and <code>JSON.parse(...)</code> creates the object used by the report. The final two arguments set connection and read timeouts in milliseconds; they are not a total execution deadline.</p><p>The report validates the fields it needs, then creates a <code>result</code> object containing:</p>"
+      },
+      {
+        "id": "rest-report-block-4",
+        "type": "code",
+        "language": "json",
+        "filename": "result.json",
+        "code": "{\n  \"id\": 1,\n  \"title\": \"sunt aut facere repellat provident occaecati excepturi optio reprehenderit\"\n}"
+      },
+      {
+        "id": "rest-report-block-5",
+        "type": "richText",
+        "html": "<p>Use the parsed values in further report processing or feed them into your report output logic.</p><h2>2. Send JSON with a POST request</h2><p>To send data, serialize the payload with <code>JSON.stringify(...)</code>, set its Content-Type and pass it as the fifth argument. Use this self-contained example as an alternative to the GET report:</p>"
+      },
+      {
+        "id": "rest-report-block-6",
+        "type": "code",
+        "language": "javascript",
+        "filename": "post-api-example.js",
+        "code": "// Alternative example: send a JSON payload.\nvar netUtils = Utilities.getNetUtils();\nvar headers = new java.util.HashMap();\nheaders.put(\"Content-Type\", \"application/json; charset=UTF-8\");\n\nvar payload = JSON.stringify({\n    title: \"ARIS integration example\",\n    body: \"Sent from an ARIS report\",\n    userId: 1\n});\n\nvar responseText = netUtils.doRestCall(\n    \"https://jsonplaceholder.typicode.com/posts\",\n    \"POST\", \"json\", headers, payload, 10000, 30000\n);\n\nvar created = JSON.parse(String(responseText));\nif (!created || typeof created.id !== \"number\") {\n    throw new Error(\"Unexpected API response: id required.\");\n}"
+      },
+      {
+        "id": "rest-report-block-7",
+        "type": "richText",
+        "html": "<p>JSONPlaceholder simulates creation and returns a response containing an ID; it does not persist the new record. For a real integration, replace the URL and payload with your target API's contract.</p><h2>Adapting this for your environment</h2><p>For an authenticated API, add the required header to the same map, for example <code>Authorization: Bearer &lt;access token&gt;</code>. Obtain credentials through your approved configuration or secret management mechanism and keep them out of published report code and logs.</p><p>Confirm server connectivity, proxy requirements and trusted HTTPS certificates. Handle request failures and validate the API's error response contract before using returned data. Parsing JSON alone does not establish success. If you need access to the HTTP status as well as the body, consider the ARIS <a href=\"https://docs.aris.com/10.0.27.0/yaa-script-help-ba/en/content/en-us/r_O_ConnectionService.html\">ConnectionService</a> API. Avoid automatically repeating a POST that might already have been processed.</p><p>The method signature shown here was checked against the ARIS 10.0.27 Script API documentation. Confirm availability and behaviour in your installed version.</p><h2>Connect ARIS to the systems your team uses</h2><p>ArisTechnical develops custom reports and adapts existing scripts to connect ARIS with external APIs. Tell us which data should move, in which direction and what should happen next.</p><p><a href=\"/contact/\"><strong>Discuss your ARIS integration with us.</strong></a></p><p>References: <a href=\"https://docs.aris.com/10.0.27.0/yaa-script-help-ba/en/content/en-us/r_O_NetUtils_dorestcall1.html\">ARIS NetUtils.doRestCall</a> · <a href=\"https://jsonplaceholder.typicode.com/\">JSONPlaceholder guide</a></p>"
+      }
+    ]
+  }
+]
