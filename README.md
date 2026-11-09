@@ -46,6 +46,8 @@ npm run seed:articles
 
 This converts the source HTML into editable Payload Lexical content, imports code blocks (including CSS), and uploads a PNG version of the report diagram into the media library. Existing articles, drafts and categories are preserved by slug, so repeating the import does not overwrite editorial changes. The original sources remain in `src/data/articles.json` and `src/data/knowledgeBaseArticles.json`.
 
+The external report article also includes an editable **API walkthrough** block with three illustrative request/response steps. Fresh imports include it automatically. To add it to an already imported article while preserving its text and publication status, run `npm run content:report-walkthrough`. This command is safe to repeat and replaces endpoint values with private placeholders in existing walkthroughs. The sample contract is defined in `src/data/reportApiFlow.ts`; endpoint paths are omitted from the UI, copied examples, public CMS responses, client props and search results.
+
 To initialize or refresh just the category definitions:
 
 ```bash
@@ -59,8 +61,11 @@ The first account created at `/admin` becomes the only administrator. Further ad
 ```bash
 npm run typecheck
 npm run lint
+npm run test:search
 npm run build
 ```
+
+Homepage search matches words across titles, summaries, categories, article text and code. It supports reordered terms, conservative spelling corrections, singular/plural forms, and a curated English/Croatian ARIS topic vocabulary. Exact title matches are boosted; incomplete and related matches are labelled. Unsupported queries can still return no results. Endpoint fields and unpublished articles are excluded. Extend the topic vocabulary in `src/utilities/articleSearch.ts` as the library grows; no external search service is required.
 
 ## Current migration status
 

@@ -12,7 +12,9 @@
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "seed:categories": "cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/seedCategories.ts",
     "seed:articles": "cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/seedArticles.ts",
+    "content:report-walkthrough": "cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/addReportWalkthrough.ts",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
+    "test:search": "node --test tests/articleSearch.test.mjs tests/homeArticleSearch.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

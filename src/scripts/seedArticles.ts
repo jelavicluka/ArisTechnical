@@ -8,7 +8,9 @@ import sharp from 'sharp'
 import integrationArticles from '@/data/articles.json'
 import { defaultCategories } from '@/data/defaultCategories'
 import knowledgeBaseArticles from '@/data/knowledgeBaseArticles.json'
+import { REPORT_ARTICLE_SLUG } from '@/data/reportApiFlow'
 import type { Article, CodeContentBlock } from '@/payload-types'
+import { addReportApiFlow } from '@/utilities/addReportApiFlow'
 
 type LegacyBlock =
   | { type: 'richText'; html: string }
@@ -111,7 +113,7 @@ try {
       data: {
         _status: source.status,
         category,
-        content,
+        content: source.slug === REPORT_ARTICLE_SLUG ? addReportApiFlow(content) : content,
         featuredImage,
         publishedAt: new Date(`${source.date}T12:00:00.000Z`).toISOString(),
         slug: source.slug,

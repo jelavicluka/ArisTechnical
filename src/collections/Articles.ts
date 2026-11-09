@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { authenticated, publishedOrAuthenticated } from '@/access/authenticated'
+import { ApiFlowBlock } from '@/blocks/ApiFlowBlock'
 import { CodeBlock } from '@/blocks/CodeBlock'
 import { ImageBlock } from '@/blocks/ImageBlock'
 import { RichTextBlock } from '@/blocks/RichTextBlock'
@@ -58,7 +59,7 @@ export const Articles: CollectionConfig = {
     {
       name: 'content',
       type: 'blocks',
-      blocks: [RichTextBlock, CodeBlock, ImageBlock],
+      blocks: [RichTextBlock, CodeBlock, ImageBlock, ApiFlowBlock],
       minRows: 1,
       required: true,
     },

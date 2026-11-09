@@ -162,6 +162,14 @@
 
 .richText { color: #c6c0cc; }
 
+.apiFlow {
+  width: min(1040px, calc(100vw - 36px));
+  margin: 64px 50% 0;
+  transform: translateX(-50%);
+}
+
+.apiFlow + .richText { margin-top: 56px; }
+
 .richText + .richText,
 .richText + .codeFigure,
 .codeFigure + .richText,

@@ -576,6 +576,13 @@
 
 .home-search-message.is-error { color: #d29b9b; }
 
+.home-search-help { margin: 10px 2px 0; color: var(--muted-light); font-size: 12px; line-height: 1.6; }
+.home-search-empty { padding: 22px 20px; color: var(--muted-light); font-size: 13px; line-height: 1.65; }
+.home-search-empty p { margin: 0 0 13px; }
+.home-search-empty button { margin: 0 7px 7px 0; padding: 7px 10px; border: 1px solid rgba(167, 108, 255, 0.3); border-radius: 6px; color: #dbc3fb; background: rgba(167, 108, 255, 0.07); font: inherit; font-size: 12px; cursor: pointer; }
+.home-search-empty button:hover,
+.home-search-empty button:focus-visible { border-color: #ac79ed; background: rgba(167, 108, 255, 0.15); }
+
 .home-search-hint {
   min-height: 37px;
   padding: 0 18px;
@@ -724,17 +731,18 @@
 
 .expertise-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 20px;
 }
 
 .expertise-card {
   position: relative;
+  min-width: 0;
   min-height: 390px;
   padding: 29px;
   display: flex;
   flex-direction: column;
-  grid-column: span 2;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 9px;
@@ -743,8 +751,6 @@
   text-decoration: none;
   transition: border-color 170ms ease, background 170ms ease, transform 170ms ease;
 }
-
-.expertise-card:nth-child(4) { grid-column: 2 / span 2; }
 
 .expertise-card:hover,
 .expertise-card:focus-visible {
@@ -2363,6 +2369,10 @@
   border: 0;
 }
 
+@media (max-width: 1024px) {
+  .expertise-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 @media (max-width: 760px) {
   .site-header { height: 72px; }
   .header-inner { width: calc(100% - 32px); }
@@ -2460,8 +2470,7 @@
   }
 
   .expertise-grid { grid-template-columns: 1fr; }
-  .expertise-card,
-  .expertise-card:nth-child(4) { min-height: 350px; grid-column: auto; }
+  .expertise-card { min-height: 350px; }
 
   .featured-article { grid-template-columns: 1fr; }
   .featured-code { min-height: 390px; margin: 16px; }

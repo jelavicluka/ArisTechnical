@@ -66,7 +66,7 @@ export default async function HomePage() {
           <div className="stage-grid" aria-hidden="true" />
           <div className="hero-content">
             <p className="eyebrow">ARIS knowledge & consulting</p>
-            <h1 id="hero-title">Technical expertise for<br /> <em>ARIS environments.</em></h1>
+            <h1 id="hero-title">Technical solutions for<br /> <em>ARIS environments.</em></h1>
             <p className="intro-copy">
               Practical technical guides, solutions and professional support for ARIS administration,
               development, automation and integration.

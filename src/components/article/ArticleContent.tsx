@@ -3,6 +3,7 @@ import { RichText } from '@payloadcms/richtext-lexical/react'
 import type { Article, Media } from '@/payload-types'
 
 import { ArticleCodeBlock } from './ArticleCodeBlock'
+import { ArticleApiFlow } from './ArticleApiFlow'
 import styles from './article.module.css'
 
 type Props = {
@@ -22,6 +23,10 @@ export const ArticleContent = ({ blocks }: Props) => (
 
       if (block.blockType === 'code') {
         return <ArticleCodeBlock {...block} key={key} />
+      }
+
+      if (block.blockType === 'apiFlow') {
+        return <div className={styles.apiFlow} key={key}><ArticleApiFlow {...block} steps={block.steps.map((step) => ({ ...step, endpoint: '{{privateEndpoint}}' }))} /></div>
       }
 
       if (block.blockType === 'image' && isMedia(block.image) && block.image.url) {

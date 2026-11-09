@@ -2,21 +2,20 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-type SearchResult = {
-  category: string
-  matchSource: 'Article text' | 'Code' | 'Summary' | 'Title'
-  slug: string
-  snippet: string
-  title: string
+import type { SearchResult } from '@/utilities/articleSearch'
+
+const HighlightSearchTerms = ({ terms, text }: { terms: string[]; text: string }) => {
+  if (!terms.length) return text
+  const escaped = [...new Set(terms)].sort((left, right) => right.length - left.length)
+    .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+  const pattern = new RegExp(`(${escaped.join('|')})`, 'giu')
+  return <>{text.split(pattern).map((part, index) => index % 2 ? <mark key={index}>{part}</mark> : part)}</>
 }
 
-const HighlightSearchTerm = ({ query, text }: { query: string; text: string }) => {
-  const matchIndex = text.toLocaleLowerCase().indexOf(query.toLocaleLowerCase())
-  if (matchIndex < 0 || !query) return text
-  const matchEnd = matchIndex + query.length
-
-  return <>{text.slice(0, matchIndex)}<mark>{text.slice(matchIndex, matchEnd)}</mark>{text.slice(matchEnd)}</>
-}
+const matchLabel = (result: SearchResult) => ({
+  related: 'Related topic', typo: 'Close spelling', partial: 'Related result',
+  exact: `Match in ${result.matchSource.toLowerCase()}`,
+})[result.matchType]
 
 export function HomeArticleSearch() {
   const [query, setQuery] = useState('')
@@ -40,24 +39,27 @@ export function HomeArticleSearch() {
       setResults([])
       setState('idle')
       setActiveIndex(-1)
+      setIsOpen(false)
       return
     }
 
     const controller = new AbortController()
+    setResults([])
+    setActiveIndex(-1)
+    setState('loading')
     const timer = window.setTimeout(async () => {
-      setState('loading')
-      setIsOpen(true)
       try {
         const response = await fetch(`/api/article-search?q=${encodeURIComponent(normalizedQuery)}`, {
           signal: controller.signal,
         })
         if (!response.ok) throw new Error('Article search failed.')
         const data = (await response.json()) as { results: SearchResult[] }
+        if (controller.signal.aborted) return
         setResults(data.results)
         setActiveIndex(data.results.length ? 0 : -1)
         setState('ready')
       } catch (error) {
-        if (!(error instanceof DOMException && error.name === 'AbortError')) {
+        if (!controller.signal.aborted && !(error instanceof DOMException && error.name === 'AbortError')) {
           setResults([])
           setActiveIndex(-1)
           setState('error')
@@ -85,7 +87,7 @@ export function HomeArticleSearch() {
       event.preventDefault()
       setIsOpen(true)
       setActiveIndex((current) => (current <= 0 ? results.length - 1 : current - 1))
-    } else if (event.key === 'Enter' && activeIndex >= 0) {
+    } else if (event.key === 'Enter' && isOpen && state === 'ready' && activeIndex >= 0) {
       event.preventDefault()
       openResult(activeIndex)
     } else if (event.key === 'Escape') {
@@ -116,10 +118,15 @@ export function HomeArticleSearch() {
           aria-autocomplete="list"
           aria-controls="home-search-suggestions"
           aria-expanded={isOpen && normalizedQuery.length >= 2}
-          aria-activedescendant={activeIndex >= 0 ? `home-search-result-${activeIndex}` : undefined}
-          placeholder="Search articles, technical topics or source code..."
+          aria-activedescendant={isOpen && activeIndex >= 0 ? `home-search-result-${activeIndex}` : undefined}
+          aria-describedby="home-search-help"
+          maxLength={80}
+          placeholder="Describe a task, topic or paste some code..."
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(event) => {
+            setQuery(event.target.value)
+            setIsOpen(event.target.value.trim().length >= 2)
+          }}
           onFocus={() => normalizedQuery.length >= 2 && setIsOpen(true)}
           onKeyDown={handleKeyDown}
         />
@@ -127,15 +134,27 @@ export function HomeArticleSearch() {
         {query ? (
           <button className="home-search-clear" type="button" aria-label="Clear search" onClick={clearSearch}>×</button>
         ) : (
-          <span className="home-search-shortcut">Titles · text · code</span>
+          <span className="home-search-shortcut">Topics · tasks · code</span>
         )}
       </div>
+
+      <p className="home-search-help" id="home-search-help">Describe what you need — exact wording isn’t required.</p>
 
       {isOpen && normalizedQuery.length >= 2 ? (
         <div className="home-search-suggestions" id="home-search-suggestions" role="listbox">
           {state === 'loading' ? <p className="home-search-message">Searching the technical library…</p> : null}
           {state === 'error' ? <p className="home-search-message is-error">Search is temporarily unavailable.</p> : null}
-          {state === 'ready' && !results.length ? <p className="home-search-message">No articles match “{normalizedQuery}”.</p> : null}
+          {state === 'ready' && !results.length ? (
+            <div className="home-search-empty">
+              <p>No close matches yet. Try a different description or explore a topic:</p>
+              {['Export to Excel', 'Run reports externally', 'Customize Connect'].map((example) => (
+                <button type="button" key={example} onClick={() => {
+                  setQuery(example)
+                  searchRef.current?.querySelector('input')?.focus()
+                }}>{example}</button>
+              ))}
+            </div>
+          ) : null}
           {results.map((result, index) => (
             <a
               className={`home-search-result${activeIndex === index ? ' is-active' : ''}`}
@@ -148,11 +167,11 @@ export function HomeArticleSearch() {
             >
               <span className="home-search-result-topline">
                 <span>{result.category}</span>
-                <small className={result.matchSource === 'Code' ? 'is-code-match' : ''}>Match in {result.matchSource.toLocaleLowerCase()}</small>
+                <small className={result.matchSource === 'Code' ? 'is-code-match' : ''}>{matchLabel(result)}</small>
               </span>
-              <strong><HighlightSearchTerm query={normalizedQuery} text={result.title} /></strong>
+              <strong><HighlightSearchTerms terms={result.matchedTerms} text={result.title} /></strong>
               <p className={result.matchSource === 'Code' ? 'is-code-snippet' : ''}>
-                <HighlightSearchTerm query={normalizedQuery} text={result.snippet} />
+                <HighlightSearchTerms terms={result.matchedTerms} text={result.snippet} />
               </p>
             </a>
           ))}

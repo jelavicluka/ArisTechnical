@@ -249,7 +249,7 @@ export interface Article {
   summary: string;
   category: number | Category;
   featuredImage?: (number | null) | Media;
-  content: (RichTextContentBlock | CodeContentBlock | ImageContentBlock)[];
+  content: (RichTextContentBlock | CodeContentBlock | ImageContentBlock | ApiFlowContentBlock)[];
   publishedAt?: string | null;
   /**
    * Calculated automatically from the article content.
@@ -334,6 +334,32 @@ export interface ImageContentBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'image';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ApiFlowContentBlock".
+ */
+export interface ApiFlowContentBlock {
+  title: string;
+  intro: string;
+  steps: {
+    title: string;
+    description: string;
+    method: 'POST' | 'GET';
+    /**
+     * Private editorial field. Endpoint values are excluded from public API responses and article previews.
+     */
+    endpoint: string;
+    requestBody?: string | null;
+    responseStatus: '202 Accepted' | '200 OK';
+    responseBody: string;
+    takeaway: string;
+    id?: string | null;
+  }[];
+  note: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'apiFlow';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -528,6 +554,7 @@ export interface ArticlesSelect<T extends boolean = true> {
         richText?: T | RichTextContentBlockSelect<T>;
         code?: T | CodeContentBlockSelect<T>;
         image?: T | ImageContentBlockSelect<T>;
+        apiFlow?: T | ApiFlowContentBlockSelect<T>;
       };
   publishedAt?: T;
   readingTime?: T;
@@ -575,6 +602,30 @@ export interface ImageContentBlockSelect<T extends boolean = true> {
   image?: T;
   caption?: T;
   displayWidth?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ApiFlowContentBlock_select".
+ */
+export interface ApiFlowContentBlockSelect<T extends boolean = true> {
+  title?: T;
+  intro?: T;
+  steps?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        method?: T;
+        endpoint?: T;
+        requestBody?: T;
+        responseStatus?: T;
+        responseBody?: T;
+        takeaway?: T;
+        id?: T;
+      };
+  note?: T;
   id?: T;
   blockName?: T;
 }

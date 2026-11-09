@@ -1,0 +1,91 @@
+.walkthrough {
+  --flow-line: rgba(196, 166, 238, 0.15);
+  --flow-muted: #b5aabd;
+  --flow-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+  color: #f4effb;
+}
+
+.heading { max-width: 660px; margin: 0 auto 28px; text-align: center; }
+.heading .eyebrow {
+  margin: 0 0 14px;
+  color: #c394ff;
+  font: 650 11px var(--flow-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.eyebrow span { margin-right: 7px; }
+.heading h2 { margin: 0; font-size: clamp(30px, 4vw, 42px); font-weight: 570; letter-spacing: -0.04em; line-height: 1.15; }
+.heading > p:last-child { margin: 16px 0 0; color: var(--flow-muted); font-size: 16px; line-height: 1.75; }
+
+.client {
+  overflow: hidden;
+  border: 1px solid rgba(177, 130, 236, 0.28);
+  border-radius: 16px;
+  background: #14111b;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.2), 0 0 70px rgba(153, 87, 238, 0.04);
+}
+.clientBar { min-height: 62px; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--flow-line); background: linear-gradient(110deg, #251b33, #19151f); }
+.clientTitle { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 650; }
+.clientIcon { width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid rgba(218, 167, 109, 0.25); border-radius: 7px; color: #efba81; background: rgba(238, 167, 88, 0.08); font: 12px var(--flow-mono); }
+.exampleLabel { color: #c0aecf; font: 10px var(--flow-mono); letter-spacing: 0.07em; text-transform: uppercase; }
+
+.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--flow-line); background: #1b1623; }
+.steps button { position: relative; min-width: 0; min-height: 76px; padding: 16px 22px; display: flex; align-items: center; gap: 11px; border: 0; border-bottom: 2px solid transparent; color: var(--flow-muted); background: transparent; font: inherit; font-size: 13px; font-weight: 550; line-height: 1.4; text-align: left; cursor: pointer; }
+.steps button + button { border-left: 1px solid var(--flow-line); }
+.steps button:hover { color: #eee3fa; background: rgba(167, 108, 255, 0.04); }
+.steps button.activeStep { border-bottom-color: #b784ff; color: #f4ebff; background: rgba(167, 108, 255, 0.08); }
+.stepNumber { flex: 0 0 auto; width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid var(--flow-line); border-radius: 50%; color: #b09bc9; font: 11px var(--flow-mono); }
+.activeStep .stepNumber { border-color: rgba(179, 128, 247, 0.5); color: #e0c5ff; background: rgba(167, 108, 255, 0.15); }
+.stepArrow { margin-left: auto; color: #77628e; }
+
+.stepDescription { min-height: 44px; margin: 24px 25px; color: var(--flow-muted); font-size: 13px; line-height: 1.7; }
+
+.exchange { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--flow-line); }
+.pane { min-width: 0; background: #110f17; }
+.pane + .pane { border-left: 1px solid var(--flow-line); background: #131019; }
+.paneHeader { min-height: 54px; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--flow-line); }
+.paneHeader h3 { margin: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 13px; font-weight: 600; }
+.paneHeader h3 > span { color: #ac9bbd; font: 10px var(--flow-mono); }
+.paneHeader button { min-height: 30px; padding: 4px 9px; flex: 0 0 auto; border: 1px solid var(--flow-line); border-radius: 5px; color: #c6b4dc; background: rgba(167, 108, 255, 0.04); font: 11px var(--flow-mono); cursor: pointer; }
+.paneHeader button:hover { border-color: #9972c2; color: #f3e9ff; }
+.paneHeader h3 > .status { display: inline-flex; align-items: center; gap: 6px; color: #96ddb7; }
+.status i { width: 5px; height: 5px; border-radius: 50%; background: #8bd2ac; }
+.auth, .responseFormat { min-height: 40px; padding: 12px 20px 0; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; color: #a99ab7; font: 10px/1.6 var(--flow-mono); }
+.auth > span { color: #bc92ee; font-size: 16px; }
+.auth code { color: #cdb6e7; font: inherit; }
+.responseFormat { justify-content: space-between; gap: 5px; }
+.responseFormat span { color: #a496b2; }
+.pane pre { min-height: 290px; margin: 0; padding: 20px; overflow-x: auto; color: #d3c8df; background: transparent; font: 12px/1.85 var(--flow-mono); tab-size: 2; scrollbar-color: #473354 transparent; }
+.codeLine { white-space: pre; }
+.emptyRequest { min-height: 290px; padding: 36px 20px; display: flex; align-items: center; justify-content: center; flex-direction: column; color: #b9aac7; text-align: center; }
+.emptyIcon { margin-bottom: 14px; color: #b18bd9; font-size: 26px; }
+.emptyRequest strong { color: #cfc0dc; font-size: 13px; font-weight: 550; }
+.emptyRequest p { margin: 8px 0 22px; color: #aa9bb8; font-size: 12px; }
+.emptyRequest code { color: #a797b7; font: 11px var(--flow-mono); }
+
+.takeaway { min-height: 78px; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-top: 1px solid var(--flow-line); background: linear-gradient(110deg, #21182e, #18131f); }
+.takeaway p { margin: 0; display: flex; gap: 10px; color: #cbb9df; font-size: 12px; line-height: 1.65; }
+.takeaway p > span { color: #be8cf8; }
+.takeaway button { flex: 0 0 auto; min-height: 38px; padding: 8px 13px; display: flex; align-items: center; gap: 14px; border: 1px solid rgba(185, 133, 247, 0.4); border-radius: 6px; color: #ead8ff; background: rgba(167, 108, 255, 0.1); font: inherit; font-size: 12px; font-weight: 600; line-height: 1.5; cursor: pointer; }
+.takeaway button:hover { border-color: #b181ed; background: rgba(167, 108, 255, 0.18); }
+.walkthrough button:focus-visible, .pane pre:focus-visible { outline: 2px solid #c79aff; outline-offset: -4px; }
+.note { max-width: 800px; margin: 18px auto 0; color: #a99bb7; font-size: 12px; line-height: 1.75; text-align: center; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+
+@media (max-width: 700px) {
+  .heading { padding: 0 12px; }
+  .heading > p:last-child { font-size: 15px; }
+  .clientBar { padding: 14px 16px; }
+  .exampleLabel { max-width: 95px; font-size: 9px; line-height: 1.6; text-align: right; }
+  .steps button { min-height: 94px; padding: 13px 8px; flex-direction: column; justify-content: center; gap: 8px; font-size: 11px; text-align: center; }
+  .stepArrow { display: none; }
+  .stepDescription { min-height: 0; margin: 20px 16px; }
+  .exchange { grid-template-columns: 1fr; }
+  .pane + .pane { border-top: 1px solid var(--flow-line); border-left: 0; }
+  .paneHeader, .auth, .responseFormat { padding-right: 16px; padding-left: 16px; }
+  .pane pre { min-height: 0; padding: 18px 16px 24px; font-size: 11px; }
+  .emptyRequest { min-height: 190px; padding: 24px 16px; }
+  .takeaway { padding: 18px 16px; align-items: flex-start; flex-direction: column; gap: 16px; }
+  .takeaway button { align-self: flex-end; }
+  .note { padding: 0 10px; text-align: left; }
+}
