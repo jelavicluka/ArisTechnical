@@ -6,7 +6,7 @@ import type { Article, Category } from '@/payload-types'
 
 export type LibraryArticle = Pick<
   Article,
-  'publishedAt' | 'readingTime' | 'slug' | 'summary' | 'title'
+  'featuredImage' | 'publishedAt' | 'readingTime' | 'slug' | 'summary' | 'title'
 > & {
   category: Pick<Category, 'shortTitle' | 'slug' | 'title'>
 }
@@ -50,6 +50,7 @@ export const getArticleLibrary = cache(async () => {
           title: article.category.title,
         },
         publishedAt: article.publishedAt,
+        featuredImage: article.featuredImage,
         readingTime: article.readingTime,
         slug: article.slug,
         summary: article.summary,

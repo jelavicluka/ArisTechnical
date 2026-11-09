@@ -8,6 +8,15 @@ const dirname = path.dirname(filename)
 
 const nextConfig: NextConfig = {
   agentRules: false,
+  async redirects() {
+    return [
+      {
+        source: '/articles/:category/:slug',
+        destination: '/articles/:slug',
+        permanent: true,
+      },
+    ]
+  },
   images: {
     localPatterns: [
       {

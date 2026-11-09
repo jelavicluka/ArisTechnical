@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { HomeArticleSearch } from '@/components/home/HomeArticleSearch'
 import { SiteFooter } from '@/components/site/SiteFooter'
 import { SiteHeader } from '@/components/site/SiteHeader'
+import { isFeaturedArticle } from '@/utilities/featuredArticle'
 import { getArticleLibrary } from '@/utilities/getArticleLibrary'
 import { buildPageMetadata, getSiteSettings } from '@/utilities/siteSettings'
 
@@ -25,6 +26,7 @@ const topicsByCategory: Record<string, string[]> = {
   'apg-automation': ['Approval workflows', 'APG development', 'Escalations', 'Automation'],
   'rest-api-integrations': ['REST APIs', 'Power BI & Tableau', 'CMDB systems', 'Data synchronization'],
   'installation-setup': ['Installation', 'Configuration', 'Upgrades', 'Environment setup'],
+  'connect-customization': ['Connect', 'Customization', 'CSS', 'Navigation'],
 }
 
 const topicLinks = [
@@ -47,8 +49,11 @@ const formatDate = (date: string | null | undefined) =>
 
 export default async function HomePage() {
   const { articles, categories } = await getArticleLibrary()
-  const featured = articles.find((article) => article.slug === 'repository-api-authentication') || articles[0]
+  const featured = articles.find(isFeaturedArticle) || articles[0]
   const latestArticles = articles.filter((article) => article.slug !== featured?.slug).slice(0, 4)
+  const featuredImage = featured?.featuredImage && typeof featured.featuredImage === 'object'
+    ? featured.featuredImage
+    : null
 
   return (
     <div className="site-shell" id="top">
@@ -78,13 +83,42 @@ export default async function HomePage() {
           </div>
         </section>
 
+        {featured ? (
+          <section className="content-section featured-section" aria-labelledby="featured-title">
+            <div className="content-container">
+              <article className="featured-article">
+                {featuredImage?.url ? (
+                  <div className="featured-code featured-diagram">
+                    <img src={featuredImage.url} alt={featuredImage.alt} width={featuredImage.width || undefined} height={featuredImage.height || undefined} />
+                  </div>
+                ) : <div className="featured-code" aria-hidden="true">
+                  <div className="code-window-bar"><i /><i /><i /><span>authentication.js</span></div>
+                  <pre><code><span className="code-violet">const</span> response = <span className="code-violet">await</span> fetch(<br />  <span className="code-green">&apos;/aris/api/repository&apos;</span>,<br />  {'{'}<br />    method: <span className="code-green">&apos;GET&apos;</span>,<br />    headers: {'{'}<br />      Authorization: <span className="code-blue">{'`Bearer ${token}`'}</span><br />    {'}'}<br />  {'}'}<br />)</code></pre>
+                  <span className="status-line"><i /> 200 OK · application/json</span>
+                </div>}
+                <div className="featured-copy">
+                  <span className="featured-badge"><span aria-hidden="true">★</span> Featured guide</span>
+                  <p className="article-category">{featured.category.shortTitle}</p>
+                  <h2 id="featured-title">{featured.title}</h2>
+                  <p>{featured.summary}</p>
+                  <div className="article-meta">
+                    <span>{featured.readingTime || 1} min read</span>
+                    <span>Updated {formatDate(featured.publishedAt)}</span>
+                  </div>
+                  <a className="button button-primary" href={`/articles/${featured.slug}`}>Read the complete guide <span aria-hidden="true">→</span></a>
+                </div>
+              </article>
+            </div>
+          </section>
+        ) : null}
+
         <section className="content-section expertise-section" id="expertise">
           <div className="content-container">
             <div className="section-heading">
               <div>
                 <p className="section-label">Technical expertise</p>
                 <h2>Focused on the technical side of ARIS.</h2>
-                <p className="section-description">Explore practical guidance across the five areas at the core of reliable ARIS environments.</p>
+                <p className="section-description">Explore practical guidance across the technical areas at the core of reliable ARIS environments.</p>
               </div>
             </div>
             <div className="expertise-grid">
@@ -102,31 +136,6 @@ export default async function HomePage() {
             </div>
           </div>
         </section>
-
-        {featured ? (
-          <section className="content-section featured-section" aria-labelledby="featured-title">
-            <div className="content-container">
-              <article className="featured-article">
-                <div className="featured-code" aria-hidden="true">
-                  <div className="code-window-bar"><i /><i /><i /><span>authentication.js</span></div>
-                  <pre><code><span className="code-violet">const</span> response = <span className="code-violet">await</span> fetch(<br />  <span className="code-green">&apos;/aris/api/repository&apos;</span>,<br />  {'{'}<br />    method: <span className="code-green">&apos;GET&apos;</span>,<br />    headers: {'{'}<br />      Authorization: <span className="code-blue">{'`Bearer ${token}`'}</span><br />    {'}'}<br />  {'}'}<br />)</code></pre>
-                  <span className="status-line"><i /> 200 OK · application/json</span>
-                </div>
-                <div className="featured-copy">
-                  <p className="section-label">Featured technical guide</p>
-                  <p className="article-category">{featured.category.shortTitle}</p>
-                  <h2 id="featured-title">{featured.title}</h2>
-                  <p>{featured.summary}</p>
-                  <div className="article-meta">
-                    <span>{featured.readingTime || 1} min read</span>
-                    <span>Updated {formatDate(featured.publishedAt)}</span>
-                  </div>
-                  <a className="button button-primary" href={`/articles/${featured.slug}`}>Read the complete guide <span aria-hidden="true">→</span></a>
-                </div>
-              </article>
-            </div>
-          </section>
-        ) : null}
 
         <section className="content-section articles-section" id="articles">
           <div className="content-container">

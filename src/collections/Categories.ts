@@ -13,7 +13,7 @@ export const Categories: CollectionConfig = {
   },
   admin: {
     defaultColumns: ['title', 'slug', 'sortOrder', 'updatedAt'],
-    description: 'The five stable technical areas used for navigation, filtering and SEO landing pages.',
+    description: 'Technical areas used for navigation, filtering and SEO landing pages.',
     useAsTitle: 'title',
   },
   fields: [

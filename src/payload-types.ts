@@ -157,7 +157,7 @@ export interface Admin {
   collection: 'admins';
 }
 /**
- * The five stable technical areas used for navigation, filtering and SEO landing pages.
+ * Technical areas used for navigation, filtering and SEO landing pages.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".
@@ -309,7 +309,7 @@ export interface RichTextContentBlock {
  * via the `definition` "CodeContentBlock".
  */
 export interface CodeContentBlock {
-  language: 'javascript' | 'json' | 'xml' | 'sql' | 'bash' | 'text';
+  language: 'javascript' | 'css' | 'json' | 'xml' | 'sql' | 'bash' | 'text';
   /**
    * Optional filename or short label displayed above the code.
    */

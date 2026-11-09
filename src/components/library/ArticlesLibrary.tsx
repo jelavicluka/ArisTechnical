@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import type { LibraryArticle, LibraryCategory } from '@/utilities/getArticleLibrary'
+import { isFeaturedArticle } from '@/utilities/featuredArticle'
 
 import styles from './library.module.css'
 
@@ -47,7 +48,7 @@ export function ArticlesLibrary({ articles, categories }: Props) {
           .join(' ')
           .toLocaleLowerCase()
           .includes(normalizedQuery)
-      }),
+      }).sort((left, right) => Number(isFeaturedArticle(right)) - Number(isFeaturedArticle(left))),
     [articles, normalizedQuery, selectedCategory],
   )
 
@@ -111,7 +112,7 @@ export function ArticlesLibrary({ articles, categories }: Props) {
               <h2>{activeCategory?.shortTitle || 'All articles'}</h2>
             </div>
             <p>
-              {filteredArticles.length} {filteredArticles.length === 1 ? 'article' : 'articles'} · Newest first
+              {filteredArticles.length} {filteredArticles.length === 1 ? 'article' : 'articles'} · {filteredArticles.some(isFeaturedArticle) ? 'Featured first' : 'Newest first'}
             </p>
           </div>
 
@@ -155,8 +156,9 @@ export function ArticlesLibrary({ articles, categories }: Props) {
           {filteredArticles.length ? (
             <div className={styles.articleList}>
               {filteredArticles.map((article) => (
-                <article className={styles.article} key={article.slug}>
+                <article className={`${styles.article} ${isFeaturedArticle(article) ? styles.featured : ''}`} key={article.slug}>
                   <div>
+                    {isFeaturedArticle(article) ? <span className="featured-badge"><span aria-hidden="true">★</span> Featured guide</span> : null}
                     <p className={styles.category}>{article.category.shortTitle}</p>
                     <h3>
                       <a href={`/articles/${article.slug}`}>{article.title}</a>

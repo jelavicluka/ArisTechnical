@@ -11,7 +11,7 @@ Production content platform built with Next.js and Payload CMS, PostgreSQL, opti
 - Dynamic `sitemap.xml` and environment-safe `robots.txt` generated from published content
 - Public access limited to published articles; all content changes require authentication
 - Optional S3-compatible storage configuration for Cloudflare R2 or another provider
-- Five agreed article categories as repeatable seed data
+- Six article categories as repeatable seed data, including ARIS Connect Customization
 - Public indexing disabled until the production domain and public identity are ready
 
 ## Local configuration
@@ -38,7 +38,15 @@ npm run generate:importmap
 npm run dev
 ```
 
-Once PostgreSQL is connected, initialize the five article categories with:
+Once PostgreSQL is connected, import the six articles from `main` and any missing categories:
+
+```bash
+npm run seed:articles
+```
+
+This converts the source HTML into editable Payload Lexical content, imports code blocks (including CSS), and uploads a PNG version of the report diagram into the media library. Existing articles, drafts and categories are preserved by slug, so repeating the import does not overwrite editorial changes. The original sources remain in `src/data/articles.json` and `src/data/knowledgeBaseArticles.json`.
+
+To initialize or refresh just the category definitions:
 
 ```bash
 npm run seed:categories
@@ -56,14 +64,15 @@ npm run build
 
 ## Current migration status
 
-- Managed PostgreSQL is connected and the single administrator has been created.
-- All five categories and the initial article catalogue have been seeded.
+- Content is stored in PostgreSQL. Each environment has its own database and administrator; create the first account at `/admin` when setting up a fresh local database.
+- Repeatable imports are available for all six categories and the six new articles from `main`.
 - Payload-backed article pages render rich text, images, syntax-highlighted code, canonical metadata, Open Graph and Twitter metadata, and `TechArticle` structured data.
 - The native Next.js article library lists and filters published Payload content by category and search term.
 - The native Next.js homepage renders Payload-backed featured and recent articles, live article search, and the public site design.
 - Shared responsive navigation and footer components are used across the homepage, article library, and article detail pages.
 - Services and contact pages are native Next.js routes, with validated server-side Resend delivery for contact inquiries.
 - The former Vite application and browser-local article administration have been removed.
+- The external report integration guide is featured on the homepage and in the library. Legacy `/articles/category/slug/` links redirect to the canonical Payload article URLs.
 
 ## Next milestone
 

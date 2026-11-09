@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="480" viewBox="0 0 1200 480" role="img" aria-labelledby="title desc">
+<title id="title">Run ARIS reports from external applications</title>
+<desc id="desc">Validated flow: an external application sends parameters to an ARIS report and receives structured results. Optional document flow: the report stores a generated file in ADS and returns its download URL to the caller.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#191122"/><stop offset="1" stop-color="#0c0b12"/></linearGradient><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10" fill="#b887fa"/></marker></defs>
+<rect width="1200" height="480" rx="16" fill="url(#bg)"/>
+<g font-family="Arial, Helvetica, sans-serif">
+<text x="42" y="43" fill="#c7a1ff" font-size="15" letter-spacing="2">ARISTECHNICAL / REPORT INTEGRATION</text>
+<g fill="#17131f" stroke="#554069" stroke-width="1.5"><rect x="42" y="105" width="280" height="130" rx="12"/><rect x="459" y="105" width="280" height="130" rx="12"/><rect x="875" y="105" width="280" height="130" rx="12"/></g>
+<g font-size="25" fill="#f6f1fc" font-weight="600"><text x="66" y="152">External application</text><text x="483" y="152">ARIS report</text><text x="899" y="152">Results to caller</text></g>
+<g font-size="18" fill="#b6aebf"><text x="66" y="190">Portal, service or scheduler</text><text x="483" y="190">Run ARIS Script API logic</text><text x="899" y="190">Structured JSON data</text></g>
+<g fill="none" stroke="#b887fa" stroke-width="2.5" marker-end="url(#arrow)"><path d="M324 170H447"/><path d="M741 170H863"/></g>
+<g font-size="15" fill="#d3b5fc"><text x="343" y="148">Parameters</text><text x="778" y="148">Result</text></g>
+<circle cx="53" cy="270" r="5" fill="#80d8ad"/><text x="67" y="276" font-size="16" fill="#9cdeb9">Validated in our PoC</text>
+<path d="M599 237V330" fill="none" stroke="#b887fa" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrow)"/>
+<text x="42" y="356" font-size="18" fill="#d7b8ff">Document delivery option</text><text x="42" y="385" font-size="16" fill="#b6aebf">Any format the report can generate</text>
+<g fill="#1b1426" stroke="#6d4a91" stroke-width="1.5"><rect x="459" y="342" width="280" height="94" rx="12"/><rect x="875" y="342" width="280" height="94" rx="12"/></g>
+<g font-size="22" font-weight="600" fill="#f6f1fc"><text x="483" y="380">Save file in ADS</text><text x="899" y="380">Return download URL</text></g>
+<g font-size="16" fill="#b6aebf"><text x="483" y="408">ARIS Document Storage</text><text x="899" y="408">Retrieve with permitted access</text></g>
+<path d="M741 389H863" fill="none" stroke="#b887fa" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrow)"/>
+</g></svg>

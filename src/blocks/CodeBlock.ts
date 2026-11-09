@@ -14,6 +14,7 @@ export const CodeBlock: Block = {
       defaultValue: 'javascript',
       options: [
         { label: 'JavaScript', value: 'javascript' },
+        { label: 'CSS', value: 'css' },
         { label: 'JSON', value: 'json' },
         { label: 'XML', value: 'xml' },
         { label: 'SQL', value: 'sql' },

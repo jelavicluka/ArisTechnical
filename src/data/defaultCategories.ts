@@ -36,4 +36,11 @@ export const defaultCategories = [
     description: 'Installation, upgrades, configuration and environment setup for maintainable ARIS platforms.',
     sortOrder: 50,
   },
+  {
+    title: 'ARIS Connect Customization',
+    shortTitle: 'Connect Customization',
+    slug: 'connect-customization',
+    description: 'Practical guidance for tailoring ARIS Connect portal styling, navigation and appearance.',
+    sortOrder: 60,
+  },
 ] as const

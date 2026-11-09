@@ -367,6 +367,10 @@
 }
 
 .article:last-child { border-bottom: 0; }
+.article.featured {
+  background: linear-gradient(110deg, rgba(167, 108, 255, 0.14), rgba(167, 108, 255, 0.025));
+  box-shadow: inset 3px 0 0 var(--violet);
+}
 .article:hover { background: rgba(167, 108, 255, 0.025); }
 
 .category {

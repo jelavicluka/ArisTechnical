@@ -9,6 +9,7 @@ import styles from './article.module.css'
 
 const languageLabels: Record<CodeContentBlock['language'], string> = {
   bash: 'Command line',
+  css: 'CSS',
   javascript: 'JavaScript',
   json: 'JSON',
   sql: 'SQL',
@@ -18,6 +19,7 @@ const languageLabels: Record<CodeContentBlock['language'], string> = {
 
 const syntaxLanguages: Record<CodeContentBlock['language'], string> = {
   bash: 'bash',
+  css: 'css',
   javascript: 'javascript',
   json: 'json',
   sql: 'sql',

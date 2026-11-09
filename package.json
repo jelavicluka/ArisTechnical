@@ -11,6 +11,7 @@
     "lint": "oxlint src --deny-warnings",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "seed:categories": "cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/seedCategories.ts",
+    "seed:articles": "cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/seedArticles.ts",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "typecheck": "tsc --noEmit"
   },
@@ -32,9 +33,11 @@
     "sharp": "^0.35.4"
   },
   "devDependencies": {
+    "@types/jsdom": "^30.0.0",
     "@types/node": "24.12.3",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
+    "jsdom": "^29.1.1",
     "oxlint": "1.75.0",
     "typescript": "6.0.3"
   },

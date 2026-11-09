@@ -6,6 +6,7 @@ const reservedArticleSlugs = new Set([
   'apg-automation',
   'rest-api-integrations',
   'installation-setup',
+  'connect-customization',
   'category',
   'search',
   'page',

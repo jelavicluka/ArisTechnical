@@ -21,7 +21,7 @@ export const Media: CollectionConfig = {
       admin: {
         description: 'Describe the meaningful content of the image. Required before publishing.',
       },
-      maxLength: 180,
+      maxLength: 320,
       required: true,
     },
     {
@@ -42,8 +42,6 @@ export const Media: CollectionConfig = {
       {
         name: 'article',
         width: 1200,
-        height: 800,
-        position: 'centre',
       },
       {
         name: 'social',
