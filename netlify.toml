@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# Required when this project is uploaded/imported without automatic framework setup.
+# The adapter creates the server function and routing for the dynamic Next.js pages.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

@@ -79,6 +79,22 @@ Homepage search matches words across titles, summaries, categories, article text
 - The former Vite application and browser-local article administration have been removed.
 - The external report integration guide is featured on the homepage and in the library. Legacy `/articles/category/slug/` links redirect to the canonical Payload article URLs.
 
+## Netlify deployment
+
+This application uses server-rendered Next.js routes and Payload; publishing the raw `.next` directory as static files is insufficient. The tracked `netlify.toml` selects `npm run build`, the `.next` publish directory, Node.js 24, and the Next.js runtime adapter that generates the server function and routing.
+
+Connect the GitHub repository in Netlify and select `next-payload-migration` as the branch to deploy. Use the repository root as the base directory. If importing an archive, import the full source project and run the Netlify build pipeline, including the configured plugin; a static drag-and-drop upload cannot build the required server runtime. Remove any old SPA catch-all redirect to `/index.html` and ensure `NETLIFY_NEXT_PLUGIN_SKIP` is not enabled.
+
+Set these environment variables in Netlify for both builds and functions before redeploying:
+
+- `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_SERVER_URL`: the public HTTPS site origin
+- `PAYLOAD_SECRET`: a stable secret for this environment
+- `DATABASE_URL`: a PostgreSQL database reachable from Netlify, with the Payload schema initialized
+
+The local `.env.local`, local PostgreSQL data and uploaded `media/` directory are not included in a GitHub ZIP. Use S3-compatible storage for persistent hosted uploads; configure the variables listed in `.env.example`. Apply Payload schema migrations and import the articles into the chosen hosted database separately; the build does not transfer local content.
+
+A successful deploy log should include `@netlify/plugin-nextjs` and function packaging, not only `next build`. Verify `/`, `/articles`, and `/api/article-search?q=excel` after deploying. A green build with a generic Netlify 404 indicates that the expected files or runtime routing are not being served. A runtime/database error after routing works requires checking function logs and the hosted environment settings.
+
 ## Next milestone
 
 Configure Resend and S3-compatible media storage, set the final production URL and Site Settings values, and run the deployment readiness review.
