@@ -4,6 +4,7 @@ import type { Article, Media } from '@/payload-types'
 
 import { ArticleCodeBlock } from './ArticleCodeBlock'
 import { ArticleApiFlow } from './ArticleApiFlow'
+import { ArticleReportJourney } from './ArticleReportJourney'
 import styles from './article.module.css'
 
 type Props = {
@@ -27,6 +28,10 @@ export const ArticleContent = ({ blocks }: Props) => (
 
       if (block.blockType === 'apiFlow') {
         return <div className={styles.apiFlow} key={key}><ArticleApiFlow {...block} steps={block.steps.map((step) => ({ ...step, endpoint: '{{privateEndpoint}}' }))} /></div>
+      }
+
+      if (block.blockType === 'reportJourney') {
+        return <div className={styles.apiFlow} key={key}><ArticleReportJourney {...block} /></div>
       }
 
       if (block.blockType === 'image' && isMedia(block.image) && block.image.url) {

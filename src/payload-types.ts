@@ -249,7 +249,9 @@ export interface Article {
   summary: string;
   category: number | Category;
   featuredImage?: (number | null) | Media;
-  content: (RichTextContentBlock | CodeContentBlock | ImageContentBlock | ApiFlowContentBlock)[];
+  content: (
+    RichTextContentBlock | CodeContentBlock | ImageContentBlock | ApiFlowContentBlock | ReportJourneyContentBlock
+  )[];
   publishedAt?: string | null;
   /**
    * Calculated automatically from the article content.
@@ -360,6 +362,18 @@ export interface ApiFlowContentBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'apiFlow';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ReportJourneyContentBlock".
+ */
+export interface ReportJourneyContentBlock {
+  title: string;
+  intro: string;
+  note: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'reportJourney';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -555,6 +569,7 @@ export interface ArticlesSelect<T extends boolean = true> {
         code?: T | CodeContentBlockSelect<T>;
         image?: T | ImageContentBlockSelect<T>;
         apiFlow?: T | ApiFlowContentBlockSelect<T>;
+        reportJourney?: T | ReportJourneyContentBlockSelect<T>;
       };
   publishedAt?: T;
   readingTime?: T;
@@ -625,6 +640,17 @@ export interface ApiFlowContentBlockSelect<T extends boolean = true> {
         takeaway?: T;
         id?: T;
       };
+  note?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ReportJourneyContentBlock_select".
+ */
+export interface ReportJourneyContentBlockSelect<T extends boolean = true> {
+  title?: T;
+  intro?: T;
   note?: T;
   id?: T;
   blockName?: T;

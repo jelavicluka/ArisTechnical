@@ -5,6 +5,7 @@ import { JSDOM } from 'jsdom'
 
 import { defaultCategories } from '../src/data/defaultCategories.ts'
 import { reportApiFlow } from '../src/data/reportApiFlow.ts'
+import { reportJourney } from '../src/data/reportJourney.ts'
 import { searchArticles } from '../src/utilities/articleSearch.ts'
 
 const articles = ['articles', 'knowledgeBaseArticles'].flatMap(name => JSON.parse(fs.readFileSync(new URL(`../src/data/${name}.json`, import.meta.url), 'utf8')))
@@ -15,6 +16,7 @@ const articles = ['articles', 'knowledgeBaseArticles'].flatMap(name => JSON.pars
     content: article.content.map(block => {
       if (block.type === 'richText') return { blockType: 'richText', body: { root: { children: [{ text: new JSDOM(block.html).window.document.body.textContent }] } } }
       if (block.type === 'code') return { ...block, blockType: 'code' }
+      if (block.type === 'reportJourney') return reportJourney
       return { blockType: 'image', image: { alt: block.alt }, caption: block.caption }
     }),
   }))

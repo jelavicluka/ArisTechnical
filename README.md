@@ -44,9 +44,13 @@ Once PostgreSQL is connected, import the six articles from `main` and any missin
 npm run seed:articles
 ```
 
-This converts the source HTML into editable Payload Lexical content, imports code blocks (including CSS), and uploads a PNG version of the report diagram into the media library. Existing articles, drafts and categories are preserved by slug, so repeating the import does not overwrite editorial changes. The original sources remain in `src/data/articles.json` and `src/data/knowledgeBaseArticles.json`.
+This converts the source HTML into editable Payload Lexical content, imports code blocks (including CSS), and imports any referenced article images into the media library. Existing articles, drafts and categories are preserved by slug, so repeating the import does not overwrite editorial changes. The original sources remain in `src/data/articles.json` and `src/data/knowledgeBaseArticles.json`.
 
-The external report article also includes an editable **API walkthrough** block with three illustrative request/response steps. Fresh imports include it automatically. To add it to an already imported article while preserving its text and publication status, run `npm run content:report-walkthrough`. This command is safe to repeat and replaces endpoint values with private placeholders in existing walkthroughs. The sample contract is defined in `src/data/reportApiFlow.ts`; endpoint paths are omitted from the UI, copied examples, public CMS responses, client props and search results.
+The external report article, **Unlock ARIS: Run Reports from External Applications**, includes a **Report integration demo** block. Readers can choose process checks, repository updates or document generation, then play or step through the application → ARIS → result journey. All results are explicitly illustrative; the demo makes no ARIS requests. It supports keyboard controls and reduced motion.
+
+Fresh imports include the rewritten text and demo automatically. To replace an already imported version of this specific article with the new editorial source, run `npm run content:report-article`. This intentionally updates its title, summary, body and SEO text, preserves its URL, category, publication date and draft/published state, and retains Payload revision history. Apply it to the target environment's database as part of rollout; deploying source alone does not update existing CMS content. The title, intro and note of the demo are editable in Payload; its sample scenarios live in `src/data/reportJourney.ts`.
+
+The older **API walkthrough** block remains supported for existing content. `npm run content:report-walkthrough` maintains legacy walkthroughs and leaves the rewritten article unchanged. Private endpoints remain excluded from public API responses, client props and search results.
 
 To initialize or refresh just the category definitions:
 

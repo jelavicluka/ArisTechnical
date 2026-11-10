@@ -9,6 +9,8 @@ const textContent = (value: unknown): string => {
 }
 
 export const addReportApiFlow = (content: Article['content']): Article['content'] => {
+  // The editorial rewrite replaces the request/response walkthrough entirely.
+  if (content.some((block) => block.blockType === 'reportJourney')) return content
   const existing = content.find((block) => block.blockType === 'apiFlow' && block.blockName === REPORT_FLOW_NAME)
   if (existing?.blockType === 'apiFlow') {
     if (existing.steps.every((step) => step.endpoint === '{{privateEndpoint}}') && existing.note === reportApiFlow.note) return content

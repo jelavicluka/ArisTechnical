@@ -156,6 +156,7 @@ const articleFields = (article: Article): SearchField[] => {
         code.push(step.requestBody || '', step.responseBody)
       }
     }
+    if (block.blockType === 'reportJourney') text.push(block.title, block.intro, block.note)
   }
   const category = typeof article.category === 'object' ? article.category : null
   return [

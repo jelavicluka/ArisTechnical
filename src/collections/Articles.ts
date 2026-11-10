@@ -5,6 +5,7 @@ import { ApiFlowBlock } from '@/blocks/ApiFlowBlock'
 import { CodeBlock } from '@/blocks/CodeBlock'
 import { ImageBlock } from '@/blocks/ImageBlock'
 import { RichTextBlock } from '@/blocks/RichTextBlock'
+import { ReportJourneyBlock } from '@/blocks/ReportJourneyBlock'
 import { slugField } from '@/fields/slug'
 import { calculateReadingTime } from '@/utilities/readingTime'
 
@@ -59,7 +60,7 @@ export const Articles: CollectionConfig = {
     {
       name: 'content',
       type: 'blocks',
-      blocks: [RichTextBlock, CodeBlock, ImageBlock, ApiFlowBlock],
+      blocks: [RichTextBlock, CodeBlock, ImageBlock, ApiFlowBlock, ReportJourneyBlock],
       minRows: 1,
       required: true,
     },

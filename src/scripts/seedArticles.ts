@@ -9,11 +9,13 @@ import integrationArticles from '@/data/articles.json'
 import { defaultCategories } from '@/data/defaultCategories'
 import knowledgeBaseArticles from '@/data/knowledgeBaseArticles.json'
 import { REPORT_ARTICLE_SLUG } from '@/data/reportApiFlow'
+import { reportJourney } from '@/data/reportJourney'
 import type { Article, CodeContentBlock } from '@/payload-types'
 import { addReportApiFlow } from '@/utilities/addReportApiFlow'
 
 type LegacyBlock =
   | { type: 'richText'; html: string }
+  | { type: 'reportJourney' }
   | { type: 'code'; language: CodeContentBlock['language']; filename: string; code: string }
   | { type: 'image'; src: string; alt: string; caption?: string }
 
@@ -76,6 +78,8 @@ try {
           blockType: 'richText',
           body: convertHTMLToLexical({ editorConfig, html: block.html, JSDOM }),
         })
+      } else if (block.type === 'reportJourney') {
+        content.push(reportJourney)
       } else if (block.type === 'code') {
         content.push({
           blockType: 'code',

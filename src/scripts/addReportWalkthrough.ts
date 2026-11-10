@@ -19,7 +19,7 @@ try {
 
   const content = addReportApiFlow(article.content)
   if (content === article.content) {
-    payload.logger.info('The article already contains the API walkthrough. No changes made.')
+    payload.logger.info('The article already contains a walkthrough or the new integration demo. No changes made.')
   } else {
     await payload.update({
       collection: 'articles',
